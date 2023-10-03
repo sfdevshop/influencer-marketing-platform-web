@@ -8,4 +8,12 @@ export default {
   // assetsBuildDirectory: "public/build",
   serverModuleFormat: "esm",
   tailwind: true,
+  browserNodeBuiltinsPolyfill: {
+    modules: {
+      buffer: true,
+      stream: true,
+      util: true,
+      crypto: true,
+    },
+  },
 };

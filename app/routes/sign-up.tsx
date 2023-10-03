@@ -2,6 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useState } from "react";
+import jwt from "jsonwebtoken";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -10,6 +11,12 @@ export const action: ActionFunction = async ({ request }) => {
   const fname = String(formData.get("fname"));
   const lname = String(formData.get("lname"));
   const isBrand = Boolean(formData.get("isBrand"));
+  const usertype = isBrand ? "BRAND" : "INFLUENCER";
+
+  // Create a jwt token
+  const jwtPayload = { email, usertype };
+  const secretKey = "123";
+  const token = jwt.sign(jwtPayload, secretKey);
 
   const errors: any = {};
 
@@ -32,6 +39,29 @@ export const action: ActionFunction = async ({ request }) => {
   if (Object.keys(errors).length > 0) {
     return json({ errors });
   }
+
+  // Send the data to the server
+  const response = await fetch("http://localhost:3000/user/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email, password, fname, lname, usertype }),
+  });
+
+  // // the backend responds with a jwt token
+  // const data = await response.json();
+
+  // // save the token in a cookie
+  // const cookie = data.token;
+
+  // // return the cookie in the response
+  // return redirect("/dashboard", {
+  //   headers: {
+  //     "Set-Cookie": cookie,
+  //   },
+  // });
 
   // Redirect to dashboard if validation is successful
   return redirect("/dashboard");
