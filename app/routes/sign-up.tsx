@@ -7,6 +7,8 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
+  const fname = String(formData.get("fname"));
+  const lname = String(formData.get("lname"));
   const isBrand = Boolean(formData.get("isBrand"));
 
   const errors: any = {};
@@ -17,6 +19,14 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (password.length < 12) {
     errors.password = "Password should be at least 12 characters";
+  }
+
+  if (!fname) {
+    errors.fname = "First name is required";
+  }
+
+  if (!lname) {
+    errors.lname = "Last name is required";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -41,9 +51,33 @@ export default function SignUpPage() {
           </h2>
           <fetcher.Form method="post" action="/sign-up">
             <input
+              type="text"
+              name="fname"
+              className="input input-bordered w-full my-1"
+              placeholder="First Name"
+            />
+            {fetcher.data?.errors?.fname ? (
+              <em className="text-error text-sm">
+                {fetcher.data.errors.fname}
+              </em>
+            ) : null}
+
+            <input
+              type="text"
+              name="lname"
+              className="input input-bordered w-full mt-4"
+              placeholder="Last Name"
+            />
+            {fetcher.data?.errors?.lname ? (
+              <em className="text-error text-sm">
+                {fetcher.data.errors.lname}
+              </em>
+            ) : null}
+
+            <input
               type="email"
               name="email"
-              className="input input-bordered w-full my-1"
+              className="input input-bordered w-full mt-4"
               placeholder="Email"
             />
             {fetcher.data?.errors?.email ? (
@@ -74,6 +108,10 @@ export default function SignUpPage() {
                     name="isBrand"
                     checked={isBrand}
                     onChange={() => setIsBrand(!isBrand)}
+                    style={{
+                      backgroundColor: isBrand ? "green" : "gray",
+                      borderColor: isBrand ? "green" : "gray",
+                    }}
                   />
                 </label>
               </div>
