@@ -2,7 +2,6 @@ import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useState } from "react";
-import jwt from "jsonwebtoken";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -12,11 +11,6 @@ export const action: ActionFunction = async ({ request }) => {
   const lname = String(formData.get("lname"));
   const isBrand = Boolean(formData.get("isBrand"));
   const usertype = isBrand ? "BRAND" : "INFLUENCER";
-
-  // Create a jwt token
-  const jwtPayload = { email, usertype };
-  const secretKey = "123";
-  const token = jwt.sign(jwtPayload, secretKey);
 
   const errors: any = {};
 
@@ -45,26 +39,34 @@ export const action: ActionFunction = async ({ request }) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ email, password, fname, lname, usertype }),
   });
 
-  // // the backend responds with a jwt token
-  // const data = await response.json();
+  // the backend responds data in json format
+  const data = await response.json();
 
-  // // save the token in a cookie
-  // const cookie = data.token;
+  // if status code is not 200, return the errors
+  if (data.status !== 200) {
+    return json({ errors: data.message });
+  } else {
+    //from set-cookie header, get the token value
+    if (response.headers.get("set-cookie")) {
+      const setCookieHeader = response.headers.get("set-cookie");
+      const token = setCookieHeader
+        ? setCookieHeader.split("=")[1].split(";")[0]
+        : null;
 
-  // // return the cookie in the response
-  // return redirect("/dashboard", {
-  //   headers: {
-  //     "Set-Cookie": cookie,
-  //   },
-  // });
+      // save the token in the cookie on the client browser
+      return redirect("/dashboard", {
+        headers: {
+          "Set-Cookie": `token=${token}; Path=/; HttpOnly; SameSite=Lax`,
+        },
+      });
+    }
+  }
 
-  // Redirect to dashboard if validation is successful
-  return redirect("/dashboard");
+  // return redirect("/dashboard");
 };
 
 export default function SignUpPage() {
