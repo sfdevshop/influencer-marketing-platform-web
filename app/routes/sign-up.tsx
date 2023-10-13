@@ -1,7 +1,15 @@
 import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+
+function setCookie(name: string, value: string, days: number) {
+  const date = new Date();
+  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + "; " + expires + "; path=/";
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -57,12 +65,14 @@ export const action: ActionFunction = async ({ request }) => {
         ? setCookieHeader.split("=")[1].split(";")[0]
         : null;
 
+      if (token) {
+        // setCookie("floofcookie", token, 30); // Adjust the name and expiration as needed
+        Cookies.set("userCookie", token, { expires: 30 });
+        console.log("cookie set");
+      }
+
       // save the token in the cookie on the client browser
-      return redirect("/dashboard", {
-        headers: {
-          "Set-Cookie": `token=${token}; Path=/; HttpOnly; SameSite=Lax`,
-        },
-      });
+      return redirect("/dashboard", {});
     }
   }
 
@@ -147,6 +157,8 @@ export default function SignUpPage() {
                   />
                 </label>
               </div>
+
+              {/* TODO - add a link to the login page */}
 
               <button
                 className="btn btn-primary"

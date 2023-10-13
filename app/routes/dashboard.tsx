@@ -1,17 +1,37 @@
-import { useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { RequestHandler } from "@remix-run/node";
-import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie"; // Import the js-cookie library
 
-export default function Dashboard() {
+function DashboardPage() {
+  // State to store the token
+  const [token, setToken] = useState("");
+
+  // Use useEffect to read the cookie when the component loads
+  useEffect(() => {
+    // Read the token cookie using the same name you used to set it
+    const tokenFromCookie = Cookies.get("yourTokenCookieName");
+
+    console.log("tokenFromCookie", tokenFromCookie);
+
+    const temp = tokenFromCookie;
+    const cookieVal = temp ? temp.split("=")[1] : null;
+
+    // assign the value to the state, which can be accessed as token
+    cookieVal && setToken(cookieVal);
+  }, []);
+
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title font-bold text-2xl mb-4">Dashboard</h2>
-          <p className="text-center">Welcome to your dashboard!</p>
+    <div>
+      <h1>Welcome to the Dashboard</h1>
+      {token ? (
+        <div>
+          <p>Token from the cookie: {token}</p>
+          {/* Your dashboard content for authenticated users */}
         </div>
-      </div>
+      ) : (
+        <p>Please log in to access the dashboard.</p>
+      )}
     </div>
   );
 }
+
+export default DashboardPage;
