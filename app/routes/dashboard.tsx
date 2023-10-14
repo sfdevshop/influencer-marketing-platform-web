@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie"; // Import the js-cookie library
+import { redirect } from "@remix-run/node";
+import { useNavigate } from "@remix-run/react";
+
 
 function DashboardPage() {
   // State to store the token
@@ -8,16 +11,14 @@ function DashboardPage() {
   // Use useEffect to read the cookie when the component loads
   useEffect(() => {
     // Read the token cookie using the same name you used to set it
-    const tokenFromCookie = Cookies.get("yourTokenCookieName");
+    const tokenFromCookie = Cookies.get("token");
 
-    console.log("tokenFromCookie", tokenFromCookie);
+    if (tokenFromCookie) {
+      setToken(tokenFromCookie);
+    }
 
-    const temp = tokenFromCookie;
-    const cookieVal = temp ? temp.split("=")[1] : null;
-
-    // assign the value to the state, which can be accessed as token
-    cookieVal && setToken(cookieVal);
   }, []);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -30,8 +31,19 @@ function DashboardPage() {
       ) : (
         <p>Please log in to access the dashboard.</p>
       )}
+      <button onClick={() => { goToChatBox() }} style={{ border: "1px solid black" }}>Chat with user 61</button>
     </div>
   );
+
+  function goToChatBox() {
+    console.log("tokenFromCookie - ", token);
+    let otherPerson = 61;
+    navigate(`/chatbox?otherPerson=${otherPerson}`);
+
+
+  }
 }
+
+
 
 export default DashboardPage;

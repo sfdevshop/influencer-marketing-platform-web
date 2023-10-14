@@ -14,7 +14,7 @@ export const action: ActionFunction = async ({ request }) => {
     errors.email = "Invalid email address";
   }
 
-  if (password.length < 12) {
+  if (password.length < 2) {
     errors.password = "Password should be at least 12 characters";
   }
 
@@ -48,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
       // save the token in the cookie on the client browser
       return redirect("/dashboard", {
         headers: {
-          "Set-Cookie": `token=${token}; Path=/; HttpOnly; SameSite=Lax`,
+          "Set-Cookie": `token=${token}; Path=/;  SameSite=Lax`,
         },
       });
     }
