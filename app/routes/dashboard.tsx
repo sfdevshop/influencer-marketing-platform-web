@@ -31,13 +31,16 @@ function DashboardPage() {
       ) : (
         <p>Please log in to access the dashboard.</p>
       )}
-      <button onClick={() => { goToChatBox() }} style={{ border: "1px solid black" }}>Chat with user 61</button>
+      <button onClick={() => { goToChatBox() }} style={{ border: "1px solid black" }}>Chat with user 60</button>
     </div>
   );
 
   function goToChatBox() {
     console.log("tokenFromCookie - ", token);
-    let otherPerson = 61;
+
+    let otherPerson = "60"; // this is where we set the id of the other person we want to chat with.
+
+
     navigate(`/chatbox?otherPerson=${otherPerson}`);
 
 
