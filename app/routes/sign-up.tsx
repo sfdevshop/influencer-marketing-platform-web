@@ -1,15 +1,8 @@
 import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
-
-function setCookie(name: string, value: string, days: number) {
-  const date = new Date();
-  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = name + "=" + value + "; " + expires + "; path=/";
-}
+import { useState } from "react";
+import { commitSession, getSession } from "~/utils/userSession";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -53,10 +46,20 @@ export const action: ActionFunction = async ({ request }) => {
 
   // the backend responds data in json format
   const data = await response.json();
+  const session = await getSession(response.headers.get("Cookie"));
 
   // if status code is not 200, return the errors
   if (data.status !== 200) {
-    return json({ errors: data.message });
+    session.flash("error", "Invalid username/password");
+
+    return json(
+      { errors: data.message },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      }
+    );
   } else {
     //from set-cookie header, get the token value
     if (response.headers.get("set-cookie")) {
@@ -65,14 +68,17 @@ export const action: ActionFunction = async ({ request }) => {
         ? setCookieHeader.split("=")[1].split(";")[0]
         : null;
 
-      if (token) {
-        // setCookie("floofcookie", token, 30); // Adjust the name and expiration as needed
-        Cookies.set("userCookie", token, { expires: 30 });
-        console.log("cookie set");
-      }
+      const userId = data.data.id;
+
+      session.set("userId", userId);
+      session.set("token", token);
 
       // save the token in the cookie on the client browser
-      return redirect("/dashboard", {});
+      return redirect("/dashboard", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
   }
 
