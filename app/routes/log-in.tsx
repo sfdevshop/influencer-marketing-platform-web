@@ -1,7 +1,7 @@
 import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
-import { useState } from "react";
+import { API } from "~/constants/api";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -23,7 +23,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   // Send the data to the server
-  const response = await fetch("http://localhost:3000/user/login", {
+  const response = await fetch(API.LOGIN_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

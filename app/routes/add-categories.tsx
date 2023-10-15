@@ -1,4 +1,5 @@
 import React, { useState, FormEvent } from "react";
+import { API } from "~/constants/api";
 
 function SelectCategories() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -31,9 +32,8 @@ function SelectCategories() {
 
     // Send the selected categories to the backend
     const categoriesData = { categories: selectedCategories };
-    console.log(categoriesData);
     try {
-      const response = await fetch("http://localhost:3000/user/addCategories", {
+      const response = await fetch(API.ADD_CATEGORIES_URL, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
