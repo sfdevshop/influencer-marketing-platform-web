@@ -75,11 +75,19 @@ export const action: ActionFunction = async ({ request }) => {
       session.set("token", token);
 
       // save the token in the cookie on the client browser
-      return redirect("/dashboard", {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
+      if (usertype === "INFLUENCER") {
+        return redirect("/add-categories", {
+          headers: {
+            "Set-Cookie": await commitSession(session),
+          },
+        });
+      } else {
+        return redirect("/dashboard", {
+          headers: {
+            "Set-Cookie": await commitSession(session),
+          },
+        });
+      }
     }
   }
 
