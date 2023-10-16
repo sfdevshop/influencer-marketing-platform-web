@@ -1,20 +1,36 @@
-import React, { useState, FormEvent } from "react";
+import { LoaderFunction, redirect, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { useState, FormEvent } from "react";
 import { API } from "~/constants/api";
+import { getUserSession, commitSession, getSession } from "~/utils/userSession";
+
+export const loader: LoaderFunction = async (args) => {
+  const { userId, token } = await getUserSession(args);
+  if (!userId || !token) {
+    return redirect("/log-in");
+  }
+
+  return json({ userId, token });
+};
 
 function SelectCategories() {
+  const data = useLoaderData<any>();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const availableCategories = [
-    "Travel",
-    "Fashion and Beauty",
-    "Fitness and Health",
-    "Food and Cuisine",
-    "Parenting and Family",
-    "Tech and Gadgets",
-    "DIY and Crafts",
-    "Business and Finance",
-    "Pets and Animals",
-    "Art and Photography",
-  ];
+
+  // make a dictionary of categories and their ids
+
+  const availableCategories: { [key: string]: string } = {
+    travel: "Travel",
+    fashion_and_beauty: "Fashion and Beauty",
+    fitness_and_health: "Fitness and Health",
+    food_and_cuisine: "Food and Cuisine",
+    parenting_and_family: "Parenting and Family",
+    tech_and_gadgets: "Tech and Gadgets",
+    diy_and_crafts: "DIY and Crafts",
+    business_and_finance: "Business and Finance",
+    pets_and_animals: "Pets and Animals",
+    art_and_photography: "Art and Photography",
+  };
 
   const handleCategoryChange = (category: string) => {
     // Toggle the selection of the category
@@ -29,26 +45,45 @@ function SelectCategories() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log(data.token);
+    const selectedCategoryKeys: string[] = [];
+
+    // Get the keys of the selected categories
+    Object.keys(availableCategories).forEach((key) => {
+      if (selectedCategories.includes(availableCategories[key])) {
+        selectedCategoryKeys.push(key);
+      }
+    });
 
     // Send the selected categories to the backend
-    const categoriesData = { categories: selectedCategories };
+    const categoriesData = { categories: selectedCategoryKeys };
+    console.log(categoriesData);
     try {
+      console.log(JSON.stringify(categoriesData));
       const response = await fetch(API.ADD_CATEGORIES_URL, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authentication: "Bearer " + localStorage.getItem("token"),
+          Authorization: "Bearer " + String(data.token),
         },
         body: JSON.stringify(categoriesData),
       });
 
-      if (response.ok) {
-        // Handle success, e.g., show a success message or redirect the user
+      // const resp = await response.json();
+
+      if (response.status === 200) {
+        // const session = await getSession(response.headers.get("Cookie"));
+        // // TODO: Redirect to the dashboard
+        // return redirect("/dashboard", {
+        //   headers: {
+        //     "Set-Cookie": await commitSession(session),
+        //   },
+        // });
       } else {
-        // Handle errors, e.g., show an error message
+        // TODO: Handle error
       }
     } catch (error) {
-      // Handle network or request errors
+      // TODO: Handle error
     }
   };
 
@@ -64,7 +99,7 @@ function SelectCategories() {
               Choose up to 3 categories
             </h2>
             <div className="flex flex-wrap justify-center">
-              {availableCategories.map((category) => (
+              {Object.values(availableCategories).map((category) => (
                 <div
                   key={category}
                   className={`p-3 m-2 rounded-full cursor-pointer transform hover:scale-105 transition duration-300 ${
