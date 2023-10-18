@@ -19,6 +19,10 @@ export const action: ActionFunction = async (args) => {
       });
     }
 
+    if (operation === ApiOps.DISCOVER) {
+      return redirect("/discover-influencers");
+    }
+
     // const result = await handleApiOperatons(args, operation, payload);
 
     return null;

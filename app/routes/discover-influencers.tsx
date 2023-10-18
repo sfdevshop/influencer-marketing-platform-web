@@ -134,7 +134,7 @@ function DiscoverInfluencers() {
         </div>
       </div>
 
-      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mt-3">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3 px-1 md:px-4 lg:px-8 py-4">
         {influencers.map((influencer) => {
           return <InfluencerCard key={influencer.id} influencer={influencer} />;
         })}
