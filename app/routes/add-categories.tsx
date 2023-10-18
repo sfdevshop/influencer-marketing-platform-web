@@ -1,4 +1,9 @@
-import { LoaderFunction, redirect, json } from "@remix-run/node";
+import {
+  LoaderFunction,
+  redirect,
+  json,
+  ActionFunction,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState, FormEvent } from "react";
 import { API } from "~/constants/api";
@@ -12,6 +17,8 @@ export const loader: LoaderFunction = async (args) => {
 
   return json({ userId, token });
 };
+
+export const action: ActionFunction = async ({ request }) => {};
 
 function SelectCategories() {
   const data = useLoaderData<any>();
@@ -72,13 +79,13 @@ function SelectCategories() {
       // const resp = await response.json();
 
       if (response.status === 200) {
-        // const session = await getSession(response.headers.get("Cookie"));
-        // // TODO: Redirect to the dashboard
-        // return redirect("/dashboard", {
-        //   headers: {
-        //     "Set-Cookie": await commitSession(session),
-        //   },
-        // });
+        const session = await getSession(response.headers.get("Cookie"));
+        // TODO: Redirect to the dashboard
+        return redirect("/dashboard", {
+          headers: {
+            "Set-Cookie": await commitSession(session),
+          },
+        });
       } else {
         // TODO: Handle error
       }

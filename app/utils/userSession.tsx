@@ -1,4 +1,5 @@
 import {
+  ActionFunctionArgs,
   LoaderFunctionArgs,
   createCookieSessionStorage,
 } from "@remix-run/node";
@@ -11,7 +12,9 @@ export const { getSession, commitSession, destroySession } =
     },
   });
 
-export const getUserSession = async (args: LoaderFunctionArgs) => {
+export const getUserSession = async (
+  args: LoaderFunctionArgs | ActionFunctionArgs
+) => {
   const session = await getSession(args.request.headers.get("Cookie"));
   let userId;
   let token;

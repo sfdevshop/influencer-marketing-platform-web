@@ -1,6 +1,7 @@
 import { LoaderFunction, json, redirect } from "@remix-run/node";
 import { getUserSession } from "~/utils/userSession";
 import { useLoaderData } from "@remix-run/react";
+import { logout } from "~/utils/db";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -19,7 +20,7 @@ function DashboardPage() {
       <h1>Welcome to the Dashboard</h1>
       <p>Your user id is {data.userId}</p>
 
-      <button className="btn btn-primary" onClick={() => {}}>
+      <button className="btn btn-primary" onClick={logout}>
         Log Out
       </button>
     </div>
