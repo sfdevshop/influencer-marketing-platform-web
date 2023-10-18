@@ -1,7 +1,8 @@
-import { useFetcher } from "@remix-run/react";
+import { useActionData, useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { API } from "~/constants/api";
+import { commitSession, getSession } from "~/sessions.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -33,10 +34,20 @@ export const action: ActionFunction = async ({ request }) => {
 
   // the backend responds data in json format
   const data = await response.json();
+  const session = await getSession(response.headers.get("Cookie"));
 
   // if status code is not 200, return the errors
   if (data.status !== 200) {
-    return json({ errors: data.message });
+    session.flash("error", "Invalid username/password");
+
+    return json(
+      { errors: data.message },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      }
+    );
   } else {
     //from set-cookie header, get the token value
     if (response.headers.get("set-cookie")) {
@@ -45,10 +56,15 @@ export const action: ActionFunction = async ({ request }) => {
         ? setCookieHeader.split("=")[1].split(";")[0]
         : null;
 
+      const userId = data.data.id;
+
+      session.set("userId", userId);
+      session.set("token", token);
+
       // save the token in the cookie on the client browser
       return redirect("/dashboard", {
         headers: {
-          "Set-Cookie": `token=${token}; Path=/; HttpOnly; SameSite=Lax`,
+          "Set-Cookie": await commitSession(session),
         },
       });
     }
@@ -57,7 +73,8 @@ export const action: ActionFunction = async ({ request }) => {
   // return redirect("/dashboard");
 };
 
-export default function SignUpPage() {
+export default function SignInPage() {
+  const data = useActionData<any>();
   const fetcher = useFetcher<any>();
   const isSubmitting = fetcher.state === "submitting";
 
@@ -100,6 +117,9 @@ export default function SignUpPage() {
                 {isSubmitting ? "Please Wait" : "Submit"}
               </button>
             </div>
+            {data && data.errors ? (
+              <div className="alert alert-error mt-4">{data.errors}</div>
+            ) : null}
           </fetcher.Form>
         </div>
       </div>
