@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import InfluencerCard from "~/components/InfluencerCard";
-import { LoaderFunction, redirect, json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { API } from "~/constants/api";
-import { getUserSession, commitSession, getSession } from "~/utils/userSession";
-import { ActionFunction } from "@remix-run/node";
-import { Influencer } from "~/types/ApiOps";
+import { getUserSession } from "~/utils/userSession";
+import type { Influencer } from "~/types/ApiOps";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -23,8 +23,6 @@ function DiscoverInfluencers() {
 
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-  const fetcher = useFetcher();
 
   // make a dictionary of categories and their ids
 

@@ -1,13 +1,11 @@
-import {
-  LoaderFunction,
-  redirect,
-  json,
-  ActionFunction,
-} from "@remix-run/node";
+import type { LoaderFunction, ActionFunction } from "@remix-run/node";
+import { redirect, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useState, FormEvent } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import { API } from "~/constants/api";
-import { getUserSession, commitSession, getSession } from "~/utils/userSession";
+import { commitSession, getSession } from "~/sessions.server";
+import { getUserSession } from "~/utils/userSession";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);

@@ -1,16 +1,5 @@
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  createCookieSessionStorage,
-} from "@remix-run/node";
-
-export const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage({
-    cookie: {
-      name: "user-session",
-      secrets: ["sfdevshop"],
-    },
-  });
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { getSession } from "~/sessions.server";
 
 export const getUserSession = async (
   args: LoaderFunctionArgs | ActionFunctionArgs

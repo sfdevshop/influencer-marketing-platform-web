@@ -2,7 +2,7 @@ import { useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useState } from "react";
-import { commitSession, getSession } from "~/utils/userSession";
+import { commitSession, getSession } from "~/sessions.server";
 import { API } from "~/constants/api";
 
 export const action: ActionFunction = async ({ request }) => {
