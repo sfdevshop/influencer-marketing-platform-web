@@ -1,8 +1,22 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import io from "socket.io-client";
+import { getUserSession } from "~/utils/userSession";
+import { LoaderFunction, json, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
+export const loader: LoaderFunction = async (args) => {
+  const { userId, token } = await getUserSession(args);
+  if (!userId || !token) {
+    return redirect("/log-in");
+  }
+
+  return json({ userId, token });
+};
 
 function ChatBox() {
+  const creds = useLoaderData<any>();
+
   const [messages, setMessages] = useState<any[]>([]);
   const [myID, setMyID] = useState("");
   const [otherPersonID, setOtherPersonID] = useState("");
@@ -22,7 +36,7 @@ function ChatBox() {
     fetch(`http://localhost:3000/chat/getchatbox?otherPerson=${otherPerson}`, {
       method: "GET",
       headers: {
-        authorization: "Bearer " + Cookies.get("token"),
+        authorization: "Bearer " + String(creds.token),
       },
     })
       .then((res) => res.json())
@@ -39,7 +53,7 @@ function ChatBox() {
         fetch(`http://localhost:3000/user/me`, {
           method: "GET",
           headers: {
-            authorization: "Bearer " + Cookies.get("token"),
+            authorization: "Bearer " + String(creds.token),
           },
         })
           .then((res) => res.json())
