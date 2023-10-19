@@ -27,8 +27,12 @@ function ChatBox() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
+
         setMessages(
-          data.messages.sort((a: any, b: any) => b.createdAt > a.createdAt)
+          data.messages
+            ? data.messages.sort((a: any, b: any) => b.createdAt > a.createdAt)
+            : []
         );
         setChatboxID(data.id);
 
@@ -40,7 +44,7 @@ function ChatBox() {
         })
           .then((res) => res.json())
           .then((data) => {
-            setMyID(data.id.toString());
+            setMyID(data.id ? data.id.toString() : "");
             setLoading(false); // Set loading to false when data is available
           })
           .catch((err) => {
