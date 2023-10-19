@@ -1,5 +1,18 @@
+import type { LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import React, { useState } from "react";
 import { ProfileForm } from "~/components/ProfileForm";
+import { getUserSession } from "~/utils/userSession";
+export const loader: LoaderFunction = async (args) => {
+  const { userId, token } = await getUserSession(args);
+  if (!userId || !token) {
+    return redirect("/log-in");
+  }
+  // const user = await getUser(userId, token);
+  // console.log(user);
+
+  return json({ userId, token });
+};
 
 export default function ProfilePage() {
   const [formData, setFormData] = useState({

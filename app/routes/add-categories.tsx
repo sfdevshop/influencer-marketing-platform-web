@@ -18,24 +18,22 @@ export const loader: LoaderFunction = async (args) => {
 
 export const action: ActionFunction = async ({ request }) => {};
 
+export const availableCategories: { [key: string]: string } = {
+  travel: "Travel",
+  fashion_and_beauty: "Fashion and Beauty",
+  fitness_and_health: "Fitness and Health",
+  food_and_cuisine: "Food and Cuisine",
+  parenting_and_family: "Parenting and Family",
+  tech_and_gadgets: "Tech and Gadgets",
+  diy_and_crafts: "DIY and Crafts",
+  business_and_finance: "Business and Finance",
+  pets_and_animals: "Pets and Animals",
+  art_and_photography: "Art and Photography",
+};
+
 function SelectCategories() {
   const data = useLoaderData<any>();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-  // make a dictionary of categories and their ids
-
-  const availableCategories: { [key: string]: string } = {
-    travel: "Travel",
-    fashion_and_beauty: "Fashion and Beauty",
-    fitness_and_health: "Fitness and Health",
-    food_and_cuisine: "Food and Cuisine",
-    parenting_and_family: "Parenting and Family",
-    tech_and_gadgets: "Tech and Gadgets",
-    diy_and_crafts: "DIY and Crafts",
-    business_and_finance: "Business and Finance",
-    pets_and_animals: "Pets and Animals",
-    art_and_photography: "Art and Photography",
-  };
 
   const handleCategoryChange = (category: string) => {
     // Toggle the selection of the category

@@ -8,4 +8,5 @@ export const API = {
   SIGNUP_URL: API_URL + "user/signup",
   GET_INFLUENCERS_URL: API_URL + "brand/getInfluencers?",
   CHAT: API_URL + "chat/getchatbox?",
+  GET_USER: API_URL + "user/me",
 };
