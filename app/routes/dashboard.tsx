@@ -56,7 +56,7 @@ function DashboardPage() {
         <h1>Welcome to the Dashboard</h1>
         {data && data.token ? (
           <div>
-            <p>Token from the cookie: {data.token}</p>
+            {/* <p>Token from the cookie: {data.token}</p> */}
             {/* Your dashboard content for authenticated users */}
           </div>
         ) : (
