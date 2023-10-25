@@ -1,6 +1,6 @@
 import { API } from "~/constants/api";
 
-export const getUser = async (userId: number, token: string) => {
+export const getUser = async (token: string) => {
   const response = await fetch(API.GET_USER, {
     method: "GET",
     headers: {

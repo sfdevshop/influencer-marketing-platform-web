@@ -1,10 +1,9 @@
 import type { LoaderFunction, ActionFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { API } from "~/constants/api";
-import { commitSession, getSession } from "~/sessions.server";
 import { getUserSession } from "~/utils/userSession";
 
 export const loader: LoaderFunction = async (args) => {
@@ -34,6 +33,7 @@ export const availableCategories: { [key: string]: string } = {
 function SelectCategories() {
   const data = useLoaderData<any>();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const handleCategoryChange = (category: string) => {
     // Toggle the selection of the category
@@ -75,13 +75,8 @@ function SelectCategories() {
       // const resp = await response.json();
 
       if (response.status === 200) {
-        const session = await getSession(response.headers.get("Cookie"));
-        // TODO: Redirect to the dashboard
-        return redirect("/dashboard", {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        });
+        navigate("/dashboard");
+        return;
       } else {
         // TODO: Handle error
       }
@@ -119,7 +114,8 @@ function SelectCategories() {
           </div>
           <button
             type="submit"
-            className="bg-primary text-white p-3 rounded-lg mt-4 w-full"
+            disabled={selectedCategories.length === 0}
+            className="bg-primary text-white p-3 rounded-lg mt-4 w-full disabled:opacity-50"
           >
             Add Categories
           </button>
