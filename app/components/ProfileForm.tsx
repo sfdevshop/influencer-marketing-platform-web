@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { API, API_URL } from "~/constants/api";
 import { availableCategories } from "~/routes/add-categories";
 import type { DbInfluencer } from "~/types/ApiOps";
 
@@ -34,6 +36,26 @@ export function ProfileForm({
     },
   };
 
+  const [picture, setPicture] = useState<string | null>(null);
+  const [pictureFile, setPictureFile] = useState<File | null>(null);
+
+  const handleFileUpload = async () => {
+    const formData = new FormData();
+    formData.append("file", pictureFile as File);
+    try {
+      await fetch(API.UPLOAD_PFP, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: "Bearer " + String(token),
+        },
+      });
+      setPictureFile(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <motion.div
       className="flex justify-center items-center"
@@ -51,21 +73,46 @@ export function ProfileForm({
             readOnly
             className="hidden"
           />
-          {/* <motion.div className="mb-4" variants={itemVariants}>
-            <label
-              htmlFor="avatar"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Avatar
-            </label>
+          <motion.div className="mb-4" variants={itemVariants}>
+            <img
+              src={
+                formData.influencerProfile.profilePicture
+                  ? API_URL + formData.influencerProfile.profilePicture
+                  : picture ?? "https://via.placeholder.com/150"
+              }
+              alt="avatar"
+              className="w-20 h-20 rounded-full object-cover"
+            />
             <input
               type="file"
               name="avatar"
               id="avatar"
               className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              accept="image/*"
+              accept="image/jpeg, image/png"
+              multiple={false}
+              max="4194304"
+              // handle file upload
+              onChange={(e) => {
+                // @ts-ignore
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                  setPictureFile(file);
+                  setPicture(reader.result as string);
+                };
+              }}
             />
-          </motion.div> */}
+            {pictureFile && (
+              <button
+                type="button"
+                onClick={handleFileUpload}
+                className="btn btn-sm btn-secondary"
+              >
+                Upload
+              </button>
+            )}
+          </motion.div>
           <motion.div className="mb-4" variants={itemVariants}>
             <label
               htmlFor="firstname"
