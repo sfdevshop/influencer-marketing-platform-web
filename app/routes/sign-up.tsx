@@ -83,7 +83,7 @@ export const action: ActionFunction = async ({ request }) => {
           },
         });
       } else {
-        return redirect("/dashboard", {
+        return redirect("/brand-home", {
           headers: {
             "Set-Cookie": await commitSession(session),
           },

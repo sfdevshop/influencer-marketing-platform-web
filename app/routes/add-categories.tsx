@@ -75,7 +75,7 @@ function SelectCategories() {
       // const resp = await response.json();
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        navigate("/influencer-home");
         return;
       } else {
         // TODO: Handle error
