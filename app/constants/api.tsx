@@ -8,5 +8,8 @@ export const API = {
   SIGNUP_URL: API_URL + "user/signup",
   GET_INFLUENCERS_URL: API_URL + "brand/getInfluencers?",
   CHAT: API_URL + "chat/getchatbox?",
-  GET_USER: API_URL + "user/me",
+  GET_USER: API_URL + "user/getUser",
+  GET_ALL_INFLUENCER_INFO: API_URL + "user/getAllInfluencerInfo",
+  UPDATE_USER: API_URL + "user/updateUser",
+  UPDATE_INFLUENCER: API_URL + "user/updateInfluencer",
 };

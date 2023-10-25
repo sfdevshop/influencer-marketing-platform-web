@@ -1,53 +1,130 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import React, { useState } from "react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { ProfileForm } from "~/components/ProfileForm";
+import { API } from "~/constants/api";
+import type { DbInfluencer } from "~/types/ApiOps";
+
+import { getUser } from "~/utils/db";
 import { getUserSession } from "~/utils/userSession";
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
   if (!userId || !token) {
     return redirect("/log-in");
   }
-  // const user = await getUser(userId, token);
-  // console.log(user);
+  const data = await getUser(token);
+  const user = data.data as DbInfluencer;
 
-  return json({ userId, token });
+  return json({ user, token });
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const user = JSON.parse(formData.get("user") as string) as DbInfluencer;
+  const token = formData.get("token") as string;
+
+  const res = await fetch(API.UPDATE_USER, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      fname: user.fname,
+      lname: user.lname,
+    }),
+  });
+
+  if (res.ok) {
+    const influencer_res = await fetch(API.UPDATE_INFLUENCER, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(user.influencerProfile),
+    });
+
+    if (influencer_res.ok) {
+      return json({ status: 200, message: "influencer updated" });
+    } else {
+      return json({ status: 500, message: "influencer not updated" });
+    }
+  } else {
+    return json({ status: 500, message: "user not updated" });
+  }
 };
 
 export default function ProfilePage() {
-  const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    password: "",
-    categories: [],
-  });
+  const data = useLoaderData<{
+    user: DbInfluencer;
+    token: string;
+  }>();
+  const fetcher = useFetcher<any>();
+
+  const [user, setUser] = useState(data.user);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setUser((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
+  useEffect(() => {
+    if (fetcher.data?.status === 200) {
+      setSuccess("Profile updated successfully");
+    } else if (fetcher.data?.status === 500) {
+      setError("Something went wrong");
+    }
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+      setSuccess(null);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [error, success]);
+
   const handleCategoryChange = (selectedCategories: any) => {
-    setFormData((prevData) => ({
+    setUser((prevData) => ({
       ...prevData,
-      categories: selectedCategories,
+      influencerProfile: {
+        ...prevData.influencerProfile,
+        categories: selectedCategories,
+      },
     }));
   };
 
-  const handleSubmit = async () => {
-    // Submit the form data to your server for updating the user's profile
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("user", JSON.stringify(user));
+    formData.append("token", data.token);
+    fetcher.submit(formData, { method: "PUT" });
   };
 
   return (
-    <ProfileForm
-      submitHandler={handleSubmit}
-      formData={formData}
-      handleInputChange={handleInputChange}
-      handleCategoryChange={handleCategoryChange}
-    />
+    <div className="flex flex-col items-center">
+      <div className="toast toast-top toast-center">
+        {success && <div className="alert alert-success">{success}</div>}
+
+        {error && <div className="alert alert-error">{error}</div>}
+      </div>
+
+      <ProfileForm
+        handleSubmit={handleSubmit}
+        formData={user}
+        handleInputChange={handleInputChange}
+        handleCategoryChange={handleCategoryChange}
+        token={data.token}
+      />
+    </div>
   );
 }

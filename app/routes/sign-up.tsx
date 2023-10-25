@@ -4,6 +4,7 @@ import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useState } from "react";
 import { commitSession, getSession } from "~/sessions.server";
 import { API } from "~/constants/api";
+import { UserTypes } from "~/types/ApiOps";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -12,7 +13,7 @@ export const action: ActionFunction = async ({ request }) => {
   const fname = String(formData.get("fname"));
   const lname = String(formData.get("lname"));
   const isBrand = Boolean(formData.get("isBrand"));
-  const usertype = isBrand ? "BRAND" : "INFLUENCER";
+  const usertype = isBrand ? UserTypes.BRAND : UserTypes.INFLUENCER;
 
   const errors: any = {};
 
@@ -75,7 +76,7 @@ export const action: ActionFunction = async ({ request }) => {
       session.set("token", token);
 
       // save the token in the cookie on the client browser
-      if (usertype === "INFLUENCER") {
+      if (usertype === UserTypes.INFLUENCER) {
         return redirect("/add-categories", {
           headers: {
             "Set-Cookie": await commitSession(session),
