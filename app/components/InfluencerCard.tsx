@@ -5,8 +5,10 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getUserSession } from "~/utils/userSession";
 import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { API } from "~/constants/api";
+import { useState } from "react";
+import InfoModal from "./InfoModal";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -22,40 +24,36 @@ interface InfluencerCardProps {
 }
 
 function InfluencerCard({ influencer }: InfluencerCardProps) {
-  // const datas = useLoaderData<any>();
+  const data = useLoaderData<any>();
+  const [influencerInfo, setInfluencerInfo] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const handleTextCLick = () => {
-    console.log("text");
+  const handleInfoCLick = () => {
+    console.log("info click");
+    console.log(API.GET_INFLUENCER_INFO + influencer.id);
 
-    // const query = API.CHAT + `otherPerson=${influencer.id}`;
-    // console.log(query);
-    // console.log(data.token);
-    // redirect(API.CHAT + `otherPerson=${influencer.id}`, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + String(data.token),
-    //   },
-    // });
+    fetch(API.GET_INFLUENCER_INFO + influencer.id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(data.token),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.data);
+        setInfluencerInfo(data.data);
+        setIsModalOpen(true);
+      });
+  };
 
-    // send a GET request to /api/text-influencer
-    // with the influencer id
-    // and the user id
-    // fetch(API.CHAT + `otherPerson=${influencer.id}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + String(data.token),
-    //   },
-    // });
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-    //   .then((response) => {
-    //     console.log(response);
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     // convert data to obj
-    //     console.log(data);
-    //   });
+  const handleMessageClick = (id: number) => {
+    navigate(`/chatbox?otherPerson=${influencer.id}`);
   };
 
   return (
@@ -71,7 +69,6 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
         <h2 className="card-desc text-xl font-bold">
           {influencer.fname} {influencer.lname}
         </h2>
-        <p>{influencer.followers}</p>
         <div className="card-tags justify-center">
           {influencer.tags.map((tag, id) => (
             <div className="badge badge-secondary px-1 mr-2 text-sm" key={id}>
@@ -80,15 +77,27 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
           ))}
         </div>
         <div className="card-actions justify-center">
-          <button className="btn btn-circle btn-primary">
+          <button
+            className="btn btn-circle btn-primary"
+            onClick={handleInfoCLick}
+          >
             <FontAwesomeIcon icon={faInfo} size="xl" />
           </button>
           <button
             className="btn btn-circle btn-primary"
-            onClick={handleTextCLick}
+            onClick={() => {
+              handleMessageClick(influencer.id);
+            }}
           >
             <FontAwesomeIcon icon={faEnvelope} size="xl" />
           </button>
+
+          {isModalOpen && (
+            <InfoModal
+              closeModal={closeModal}
+              influencerInfo={influencerInfo}
+            />
+          )}
         </div>
       </div>
     </div>
