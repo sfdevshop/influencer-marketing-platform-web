@@ -10,6 +10,7 @@ export const action: ActionFunction = async (args) => {
     if (!operation) {
       return new Response("Invalid operation", { status: 400 });
     }
+    // TODO: remove these logics
     if (operation === ApiOps.LOGOUT) {
       const session = await getSession(args.request.headers.get("Cookie"));
       return redirect("/log-in", {

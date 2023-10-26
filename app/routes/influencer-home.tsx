@@ -1,8 +1,10 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import { getUserSession } from "~/utils/userSession";
-import { destroySession, getSession } from "~/sessions.server";
+import { getUser } from "~/utils/db";
+import { UserTypes, type DbInfluencer } from "~/types/ApiOps";
+import { API_URL } from "~/constants/api";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -10,19 +12,14 @@ export const loader: LoaderFunction = async (args) => {
     return redirect("/log-in");
   }
 
-  return json({ userId, token });
-};
+  const data = await getUser(token);
+  const user = data.data as DbInfluencer;
 
-export const action: ActionFunction = async ({ request }) => {
-  const data = useLoaderData<any>();
-  console.log(data.token);
+  if (user.usertype === UserTypes.BRAND) {
+    return redirect("/brand-home");
+  }
 
-  const session = await getSession(request.headers.get("Cookie"));
-  return redirect("/log-in", {
-    headers: {
-      "Set-Cookie": await destroySession(session),
-    },
-  });
+  return json({ user, userId, token });
 };
 
 function InfluencerHome() {
@@ -39,7 +36,11 @@ function InfluencerHome() {
       <div className="grid h-screen grid-flow-col gap-4">
         <div className="flex  bg-midnight">
           <div className="h-full w-full flex items-center justify-center">
-            profilePicture
+            <img
+              className="h-96 w-96 rounded-full"
+              src={API_URL + data.user.influencerProfile.profilePicture}
+              alt="profile"
+            />
           </div>
         </div>
 
@@ -56,9 +57,9 @@ function InfluencerHome() {
                 CHATS
               </button>
             </div>
-            <form method="post" action="/api">
-              <div className="action-buttons">
-                <div className="row-span-1 p-4 pt-12 pl-24">
+            <div className="action-buttons">
+              <div className="row-span-1 p-4 pt-12 pl-24">
+                <Link to="/profile" prefetch="intent">
                   <button
                     className="btn btn-primary btn-block"
                     style={{ height: "6rem" }}
@@ -67,8 +68,10 @@ function InfluencerHome() {
                   >
                     PROFILE
                   </button>
-                </div>
-                <div className="row-span-1 p-4 pt-16 pl-24">
+                </Link>
+              </div>
+              <div className="row-span-1 p-4 pt-16 pl-24">
+                <form method="post" action="/api">
                   <button
                     className="btn btn-primary btn-block"
                     style={{ height: "6rem" }}
@@ -77,9 +80,9 @@ function InfluencerHome() {
                   >
                     LOGOUT
                   </button>
-                </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

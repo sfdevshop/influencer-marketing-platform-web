@@ -1,8 +1,10 @@
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { getUserSession } from "~/utils/userSession";
-import { destroySession, getSession } from "~/sessions.server";
+import type { DbInfluencer } from "~/types/ApiOps";
+import { UserTypes } from "~/types/ApiOps";
+import { getUser } from "~/utils/db";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -10,19 +12,15 @@ export const loader: LoaderFunction = async (args) => {
     return redirect("/log-in");
   }
 
-  return json({ userId, token });
-};
+  const data = await getUser(token);
+  // TODO: change to DbBrand
+  const user = data.data as DbInfluencer;
 
-export const action: ActionFunction = async ({ request }) => {
-  const data = useLoaderData<any>();
-  console.log(data.token);
+  if (user.usertype === UserTypes.INFLUENCER) {
+    return redirect("/influencer-home");
+  }
 
-  const session = await getSession(request.headers.get("Cookie"));
-  return redirect("/log-in", {
-    headers: {
-      "Set-Cookie": await destroySession(session),
-    },
-  });
+  return json({ user, userId, token });
 };
 
 function BrandHome() {
