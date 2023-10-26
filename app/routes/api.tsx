@@ -25,6 +25,10 @@ export const action: ActionFunction = async (args) => {
 
     // const result = await handleApiOperatons(args, operation, payload);
 
+    if (operation === ApiOps.PROFILE) {
+      return redirect("/profile");
+    }
+
     return null;
   } catch (e) {
     console.error(e);

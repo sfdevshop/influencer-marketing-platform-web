@@ -2,6 +2,7 @@ export enum ApiOps {
   LOGOUT = "LOGOUT",
   DISCOVER = "DISCOVER-INFLUENCERS",
   GET_USER = "GET-USER",
+  PROFILE = "PROFILE",
 }
 
 // export user types
