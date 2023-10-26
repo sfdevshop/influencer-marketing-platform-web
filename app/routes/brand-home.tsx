@@ -35,44 +35,53 @@ function BrandHome() {
   }
 
   return (
-    <div className="container h-screen flex justify-center items-center">
-      <p className="text-2xl">Your User ID: {data.userId}</p>
-      <br />
-      <form method="post" action="/api">
-        <button className="btn btn-primary" name="operation" value="LOGOUT">
-          Log Out
-        </button>
-        <br />
-        <br />
-
-        <button
-          className="btn btn-primary"
-          name="operation"
-          value="DISCOVER-INFLUENCERS"
-        >
-          Discover Influencers
-        </button>
-      </form>
-      <div>
-        <br />
-        <h1>Welcome to the Dashboard</h1>
-        {data && data.token ? (
-          <div>
-            {/* <p>Token from the cookie: {data.token}</p> */}
-            {/* Your dashboard content for authenticated users */}
+    <div className="container">
+      <div className="grid h-screen grid-flow-col gap-4">
+        <div className="flex  bg-midnight">
+          <div className="h-full w-full flex items-center justify-center">
+            profilePicture
           </div>
-        ) : (
-          <p>Please log in to access the dashboard.</p>
-        )}
+        </div>
 
-        <button
-          onClick={() => {
-            goToChatBox();
-          }}
-          className="btn btn-primary"
-        >
-          Chat with user 16
-        </button>
+        <div className="col-span-1">
+          <div className="flex grid gap-4">
+            <div className="row-span-1 p-4 pt-24 pl-24">
+              <button
+                className="btn btn-primary btn-block"
+                style={{ height: "6rem" }}
+                onClick={() => {
+                  goToChatBox();
+                }}
+              >
+                CHATS
+              </button>
+            </div>
+            <form method="post" action="/api">
+              <div className="action-buttons">
+                <div className="row-span-1 p-4 pt-12 pl-24">
+                  <button
+                    className="btn btn-primary btn-block"
+                    style={{ height: "6rem" }}
+                    name="operation"
+                    value="DISCOVER-INFLUENCERS"
+                  >
+                    Discover Influencers
+                  </button>
+                </div>
+                <div className="row-span-1 p-4 pt-16 pl-24">
+                  <button
+                    className="btn btn-primary btn-block"
+                    style={{ height: "6rem" }}
+                    name="operation"
+                    value="LOGOUT"
+                  >
+                    LOGOUT
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
