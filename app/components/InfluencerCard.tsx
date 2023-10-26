@@ -1,11 +1,10 @@
-import { Influencer } from "~/types/ApiOps";
+import type { Influencer } from "~/types/ApiOps";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faInfo } from "@fortawesome/free-solid-svg-icons";
-import { redirect } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { faComment, faInfo } from "@fortawesome/free-solid-svg-icons";
+import { redirect, json } from "@remix-run/node";
 import { getUserSession } from "~/utils/userSession";
 import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { API } from "~/constants/api";
 import { useState } from "react";
 import InfoModal from "./InfoModal";
@@ -27,7 +26,6 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
   const data = useLoaderData<any>();
   const [influencerInfo, setInfluencerInfo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   const handleInfoCLick = () => {
     console.log(API.GET_INFLUENCER_INFO + influencer.id);
@@ -49,11 +47,6 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleMessageClick = (id: number) => {
-    
-    navigate(`/chatbox?otherPerson=${id}`);
   };
 
   return (
@@ -83,14 +76,11 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
           >
             <FontAwesomeIcon icon={faInfo} size="xl" />
           </button>
-          <button
-            className="btn btn-circle btn-primary"
-            onClick={() => {
-              handleMessageClick(influencer.id);
-            }}
-          >
-            <FontAwesomeIcon icon={faEnvelope} size="xl" />
-          </button>
+          <Link to={`/chatbox?otherPerson=${influencer.id}`}>
+            <button className="btn btn-circle btn-primary">
+              <FontAwesomeIcon icon={faComment} size="xl" />
+            </button>
+          </Link>
 
           {isModalOpen && (
             <InfoModal

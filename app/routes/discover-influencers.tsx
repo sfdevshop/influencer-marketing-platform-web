@@ -7,7 +7,8 @@ import { redirect, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { API } from "~/constants/api";
 import { getUserSession } from "~/utils/userSession";
-import type { Influencer } from "~/types/ApiOps";
+import { UserTypes, type DbInfluencer, type Influencer } from "~/types/ApiOps";
+import { getUser } from "~/utils/db";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -15,7 +16,13 @@ export const loader: LoaderFunction = async (args) => {
     return redirect("/log-in");
   }
 
-  return json({ userId, token });
+  const data = await getUser(token);
+  const user = data.data as DbInfluencer;
+  if (user.usertype === UserTypes.INFLUENCER) {
+    return redirect("/influencer-home");
+  }
+
+  return json({ user, userId, token });
 };
 
 function DiscoverInfluencers() {
