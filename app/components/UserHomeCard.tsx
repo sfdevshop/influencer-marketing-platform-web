@@ -15,7 +15,12 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
         <div className="avatar">
           <div className="w-full rounded-xl ring ring-secondary">
             <img
-              src={API_URL + user.influencerProfile.profilePicture}
+              src={
+                user.influencerProfile?.profilePicture
+                  ? API_URL + user.influencerProfile.profilePicture
+                  : "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+              }
+              className="max-w-sm"
               alt="profile"
             />
           </div>
