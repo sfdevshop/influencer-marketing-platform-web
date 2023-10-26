@@ -48,7 +48,7 @@ function ChatBox() {
     const url = new URL(url_string);
     const params = url.searchParams;
 
-    const otherPerson = params.get("otherPerson") || "";
+    const otherPerson = params.get("otherPerson") || "911";
     setOtherPersonID(otherPerson);
 
     fetch(`http://localhost:3000/chat/getchatbox?otherPerson=${otherPerson}`, {
@@ -141,7 +141,7 @@ function ChatBox() {
                 >
                   <div className="p-2">
                     <span className="font-bold">
-                      {message.sender === myID ? 'Me' : 'Other'}
+                      {message.sender === myID ? 'Me' : 'Brand X'}
                     </span>
                     <p className="text-black">{message.content}</p>
                   </div>

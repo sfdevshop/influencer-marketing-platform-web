@@ -26,7 +26,7 @@ function InfluencerHome() {
   const data = useLoaderData<any>();
   const navigate = useNavigate();
   function goToChatBox() {
-    let otherPerson = "16"; // this is where we set the id of the other person we want to chat with.
+    let otherPerson = "69"; // this is where we set the id of the other person we want to chat with.
 
     navigate(`/chatbox?otherPerson=${otherPerson}`);
   }
