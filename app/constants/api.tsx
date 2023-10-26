@@ -13,5 +13,5 @@ export const API = {
   UPDATE_USER: API_URL + "/user/updateUser",
   UPDATE_INFLUENCER: API_URL + "/user/updateInfluencer",
   UPLOAD_PFP: API_URL + "/user/uploadPfp",
-  GET_INFLUENCER_INFO: API_URL + "brand/getInfluencerInfo/",
+  GET_INFLUENCER_INFO: API_URL + "/brand/getInfluencerInfo/",
 };

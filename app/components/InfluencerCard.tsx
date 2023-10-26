@@ -30,7 +30,6 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
   const navigate = useNavigate();
 
   const handleInfoCLick = () => {
-    console.log("info click");
     console.log(API.GET_INFLUENCER_INFO + influencer.id);
 
     fetch(API.GET_INFLUENCER_INFO + influencer.id, {
