@@ -52,7 +52,8 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
   };
 
   const handleMessageClick = (id: number) => {
-    navigate(`/chatbox?otherPerson=${influencer.id}`);
+    
+    navigate(`/chatbox?otherPerson=${id}`);
   };
 
   return (
