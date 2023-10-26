@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async (args) => {
   const data = await getUser(token);
   const user = data.data as DbInfluencer;
   if (user.usertype === UserTypes.INFLUENCER) {
-    return redirect("/influencer-home");
+    return redirect("/dashboard");
   }
 
   return json({ user, userId, token });

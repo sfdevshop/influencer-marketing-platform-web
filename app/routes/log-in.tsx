@@ -61,30 +61,13 @@ export const action: ActionFunction = async ({ request }) => {
       session.set("userId", userId);
       session.set("token", token);
 
-      // save the token in the cookie on the client browser
-      // return redirect("/dashboard", {
-      //   headers: {
-      //     "Set-Cookie": await commitSession(session),
-      //   },
-      // });
-
-      if (data.data.usertype === "BRAND") {
-        return redirect("/brand-home", {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        });
-      } else {
-        return redirect("/influencer-home", {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        });
-      }
+      return redirect("/dashboard", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
   }
-
-  // return redirect("/dashboard");
 };
 
 export default function SignInPage() {

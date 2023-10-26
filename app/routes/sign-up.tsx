@@ -74,21 +74,11 @@ export const action: ActionFunction = async ({ request }) => {
 
       session.set("userId", userId);
       session.set("token", token);
-
-      // save the token in the cookie on the client browser
-      if (usertype === UserTypes.INFLUENCER) {
-        return redirect("/add-categories", {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        });
-      } else {
-        return redirect("/brand-home", {
-          headers: {
-            "Set-Cookie": await commitSession(session),
-          },
-        });
-      }
+      return redirect("/dashboard", {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     }
   }
 
