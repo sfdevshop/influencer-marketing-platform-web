@@ -2,6 +2,7 @@ import {
   faComment,
   faUser,
   faArrowRightFromBracket,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "@remix-run/react";
@@ -38,11 +39,19 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
                 <FontAwesomeIcon icon={faComment} />
               </button>
             </Link>
-            <Link to="/profile" prefetch="intent">
-              <button className="btn btn-primary btn-circle mx-2">
-                <FontAwesomeIcon icon={faUser} />
-              </button>
-            </Link>
+            {user.usertype.toLowerCase() === "influencer" ? (
+              <Link to="/profile" prefetch="intent">
+                <button className="btn btn-primary btn-circle mx-2">
+                  <FontAwesomeIcon icon={faUser} />
+                </button>
+              </Link>
+            ) : (
+              <Link to="/discover-influencers" prefetch="intent">
+                <button className="btn btn-primary btn-circle mx-2">
+                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </button>
+              </Link>
+            )}
 
             <form method="post" action="/api">
               <button
