@@ -76,7 +76,9 @@ export function ProfileForm({
           <motion.div className="mb-4" variants={itemVariants}>
             <img
               src={
-                formData.influencerProfile.profilePicture
+                picture
+                  ? picture
+                  : formData.influencerProfile.profilePicture
                   ? API_URL + formData.influencerProfile.profilePicture
                   : picture ?? "https://via.placeholder.com/150"
               }

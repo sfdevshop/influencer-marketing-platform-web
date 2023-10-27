@@ -74,11 +74,15 @@ export const action: ActionFunction = async ({ request }) => {
 
       session.set("userId", userId);
       session.set("token", token);
-      return redirect("/dashboard", {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
+      // get usertype
+      return redirect(
+        usertype === UserTypes.INFLUENCER ? "/add-categories" : "/dashboard",
+        {
+          headers: {
+            "Set-Cookie": await commitSession(session),
+          },
+        }
+      );
     }
   }
 
