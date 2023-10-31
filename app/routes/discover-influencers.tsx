@@ -9,6 +9,7 @@ import { API } from "~/constants/api";
 import { getUserSession } from "~/utils/userSession";
 import { UserTypes, type DbInfluencer, type Influencer } from "~/types/ApiOps";
 import { getUser } from "~/utils/db";
+import Navbar from "~/components/Navbar";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -112,6 +113,7 @@ function DiscoverInfluencers() {
 
   return (
     <div className="discover-influencers-container">
+      <Navbar />
       <div className="top-section bg-slate-800  p-8">
         <h2 className="page-title text-center mb-8 text-3xl font-bold py-2 text-white">
           Discover Influencers
