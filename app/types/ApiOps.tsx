@@ -42,3 +42,41 @@ export enum UserTypes {
   INFLUENCER = "INFLUENCER",
   BRAND = "BRAND",
 }
+
+// [
+//   {
+//       "fname": "Jane",
+//       "lname": "Molly",
+//       "id": 72,
+//       "influencerProfile": {
+//           "profilePicture": "lol@lol.com"
+//       },
+//       "profilePicture": "lol@lol.com"
+//   },
+//   {
+//       "fname": "Jane",
+//       "lname": "Molly",
+//       "id": 72,
+//       "influencerProfile": {
+//           "profilePicture": "lol@lol.com"
+//       },
+//       "profilePicture": "lol@lol.com"
+//   }
+
+// ]
+
+export type Chats = {
+  peopleChat: PeopleChat[];
+};
+
+export type PeopleChat = {
+  fname: string;
+  lname: string;
+  id: number;
+  influencerProfilePic: InfluencerProfilePic;
+  profilePicture: string;
+};
+
+export type InfluencerProfilePic = {
+  profilePicture: string;
+};
