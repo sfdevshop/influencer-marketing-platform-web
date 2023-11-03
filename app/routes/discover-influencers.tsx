@@ -1,6 +1,6 @@
 // src/routes/discover-influencers.tsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import InfluencerCard from "~/components/InfluencerCard";
 import type { LoaderFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
@@ -93,17 +93,8 @@ function DiscoverInfluencers() {
         .then((data) => {
           // convert data to obj
 
-          const influencers = data.data.map((influencer: any) => {
-            return {
-              id: influencer.id,
-              fname: influencer.fname,
-              lname: influencer.lname,
-              tags: influencer.tags.map(
-                (tag: string) => availableCategories[tag.toLowerCase()]
-              ),
-              followers: influencer.followers,
-            };
-          });
+          const influencers = data.data as Influencer[];
+
           setInfluencers(influencers);
         });
     } catch (err) {

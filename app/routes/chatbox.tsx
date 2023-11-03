@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import Cookies from "js-cookie";
 import io from "socket.io-client";
 import { getUserSession } from "~/utils/userSession";
-import { LoaderFunction, json, redirect } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 export const loader: LoaderFunction = async (args) => {
@@ -30,9 +30,9 @@ export function getRandomFloat() {
 
 function ChatBox() {
   const creds = useLoaderData<any>();
-
+  const myID = creds.userId;
+  const token = creds.token;
   const [messages, setMessages] = useState<any[]>([]);
-  const [myID, setMyID] = useState("");
   const [otherPersonID, setOtherPersonID] = useState("");
   const [chatboxID, setChatboxID] = useState("");
   const [loading, setLoading] = useState(true); // Loading state
@@ -53,7 +53,7 @@ function ChatBox() {
     fetch(`http://localhost:3000/chat/getchatbox?otherPerson=${otherPerson}`, {
       method: "GET",
       headers: {
-        authorization: "Bearer " + String(creds.token),
+        authorization: "Bearer " + String(token),
       },
     })
       .then((res) => res.json())
@@ -67,22 +67,7 @@ function ChatBox() {
         );
         setMessageArrived(getRandomFloat());
         setChatboxID(data.id);
-
-        fetch(`http://localhost:3000/user/me`, {
-          method: "GET",
-          headers: {
-            authorization: "Bearer " + String(creds.token),
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setMyID(data.id ? data.id.toString() : "");
-            setLoading(false); // Set loading to false when data is available
-          })
-          .catch((err) => {
-            console.error("Error fetching data:", err);
-            setLoading(false); // Ensure loading is set to false even on error
-          });
+        setLoading(false);
       });
   }, [otherPersonID]);
 

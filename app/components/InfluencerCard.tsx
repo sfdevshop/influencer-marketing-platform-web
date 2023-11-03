@@ -1,22 +1,10 @@
 import type { Influencer } from "~/types/ApiOps";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faInfo } from "@fortawesome/free-solid-svg-icons";
-import { redirect, json } from "@remix-run/node";
-import { getUserSession } from "~/utils/userSession";
-import type { LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { API, API_URL } from "~/constants/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfoModal from "./InfoModal";
-
-export const loader: LoaderFunction = async (args) => {
-  const { userId, token } = await getUserSession(args);
-  if (!userId || !token) {
-    return redirect("/log-in");
-  }
-
-  return json({ userId, token });
-};
 
 interface InfluencerCardProps {
   influencer: Influencer;
@@ -26,7 +14,6 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
   const data = useLoaderData<any>();
   const [influencerInfo, setInfluencerInfo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [picture, setPicture] = useState<string | undefined>(undefined);
   const handleInfoCLick = () => {
     console.log(API.GET_INFLUENCER_INFO + influencer.id);
 
@@ -49,42 +36,18 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
     setIsModalOpen(false);
   };
 
-  function fetchInfluencerPicture(influencer: Influencer, token: string) {
-    return fetch(API_URL + influencer.profilePicture, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + String(token),
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.blob(); // or res.text() depending on the response type
-        } else {
-          console.error("Failed to fetch profile picture");
-          return null;
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching profile picture:", error);
-        return null;
-      });
-  }
-
-  useEffect(() => {
-    fetchInfluencerPicture(influencer, data.token).then((pictureData) => {
-      if (pictureData) {
-        const dataUrl = URL.createObjectURL(pictureData);
-        setPicture(dataUrl); // Set the data URL as the picture state
-        console.log("picture", dataUrl);
-      }
-    });
-  }, []);
-
   return (
     <div className="card w-full bg-base-100 shadow-xl">
       <figure className="px-5 pt-5">
-        <img src={picture} alt="pfp" className="rounded-xl" />
+        <img
+          src={
+            influencer.profilePicture
+              ? API_URL + influencer.profilePicture
+              : "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+          }
+          alt="pfp"
+          className="rounded-xl"
+        />
       </figure>
       <div className="card-body">
         <h2 className="card-desc text-xl font-bold">

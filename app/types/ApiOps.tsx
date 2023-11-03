@@ -12,6 +12,7 @@ export type Influencer = {
   fname: string;
   lname: string;
   tags: string[];
+  profilePicture: string;
   followers: number | null;
 };
 
