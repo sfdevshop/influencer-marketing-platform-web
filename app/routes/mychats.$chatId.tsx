@@ -154,7 +154,7 @@ export default function ActiveChat() {
 
   function sendMessage() {
     let meta = {
-      from: creds.userId,
+      from: creds.userId.toString(),
       to: otherPersonID,
       chatboxID: chatboxID,
     };
