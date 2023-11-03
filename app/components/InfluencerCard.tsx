@@ -5,8 +5,8 @@ import { redirect, json } from "@remix-run/node";
 import { getUserSession } from "~/utils/userSession";
 import type { LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { API } from "~/constants/api";
-import { useState } from "react";
+import { API, API_URL } from "~/constants/api";
+import { useEffect, useState } from "react";
 import InfoModal from "./InfoModal";
 
 export const loader: LoaderFunction = async (args) => {
@@ -26,7 +26,7 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
   const data = useLoaderData<any>();
   const [influencerInfo, setInfluencerInfo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  const [picture, setPicture] = useState<string | undefined>(undefined);
   const handleInfoCLick = () => {
     console.log(API.GET_INFLUENCER_INFO + influencer.id);
 
@@ -49,14 +49,42 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
     setIsModalOpen(false);
   };
 
+  function fetchInfluencerPicture(influencer: Influencer, token: string) {
+    return fetch(API_URL + influencer.profilePicture, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + String(token),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.blob(); // or res.text() depending on the response type
+        } else {
+          console.error("Failed to fetch profile picture");
+          return null;
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching profile picture:", error);
+        return null;
+      });
+  }
+
+  useEffect(() => {
+    fetchInfluencerPicture(influencer, data.token).then((pictureData) => {
+      if (pictureData) {
+        const dataUrl = URL.createObjectURL(pictureData);
+        setPicture(dataUrl); // Set the data URL as the picture state
+        console.log("picture", dataUrl);
+      }
+    });
+  }, []);
+
   return (
     <div className="card w-full bg-base-100 shadow-xl">
       <figure className="px-5 pt-5">
-        <img
-          src="https://cdn.vox-cdn.com/thumbor/VWRbS9TmU4jzd1gUbC2nN4l85Pc=/0x0:2184x1372/1200x800/filters:focal(984x384:1332x732)/cdn.vox-cdn.com/uploads/chorus_image/image/72025507/GettyImages_1280349927.0.jpg"
-          alt="pfp"
-          className="rounded-xl"
-        />
+        <img src={picture} alt="pfp" className="rounded-xl" />
       </figure>
       <div className="card-body">
         <h2 className="card-desc text-xl font-bold">
