@@ -164,7 +164,7 @@ function ChatBox() {
 
   function sendMessage() {
     let meta = {
-      from: myID,
+      from: myID.toString(),
       to: otherPersonID,
       chatboxID: chatboxID,
     };
