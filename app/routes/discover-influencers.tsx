@@ -7,9 +7,9 @@ import { redirect, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { API } from "~/constants/api";
 import { getUserSession } from "~/utils/userSession";
-import { UserTypes, type DbInfluencer, type Influencer } from "~/types/ApiOps";
+import { UserTypes, type DbInfluencer } from "~/types/ApiOps";
 import { getUser } from "~/utils/db";
-import Navbar from "~/components/Navbar";
+import { availableCategories } from "~/constants/categories";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -29,23 +29,8 @@ export const loader: LoaderFunction = async (args) => {
 function DiscoverInfluencers() {
   const data = useLoaderData<any>();
 
-  const [influencers, setInfluencers] = useState<Influencer[]>([]);
+  const [influencers, setInfluencers] = useState<DbInfluencer[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-  // make a dictionary of categories and their ids
-
-  const availableCategories: { [key: string]: string } = {
-    travel: "Travel",
-    fashion_and_beauty: "Fashion and Beauty",
-    fitness_and_health: "Fitness and Health",
-    food_and_cuisine: "Food and Cuisine",
-    parenting_and_family: "Parenting and Family",
-    tech_and_gadgets: "Tech and Gadgets",
-    diy_and_crafts: "DIY and Crafts",
-    business_and_finance: "Business and Finance",
-    pets_and_animals: "Pets and Animals",
-    art_and_photography: "Art and Photography",
-  };
 
   const handleCategoryChange = (category: string) => {
     // Toggle the selection of the category
@@ -87,13 +72,10 @@ function DiscoverInfluencers() {
         },
       })
         .then((response) => {
-          console.log(response);
           return response.json();
         })
         .then((data) => {
-          // convert data to obj
-
-          const influencers = data.data as Influencer[];
+          const influencers = data.data as DbInfluencer[];
 
           setInfluencers(influencers);
         });
@@ -104,7 +86,6 @@ function DiscoverInfluencers() {
 
   return (
     <div className="discover-influencers-container">
-      <Navbar />
       <div className="top-section bg-slate-800  p-8">
         <h2 className="page-title text-center mb-8 text-3xl font-bold py-2 text-white">
           Discover Influencers

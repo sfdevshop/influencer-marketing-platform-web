@@ -1,35 +1,20 @@
-import type { Influencer } from "~/types/ApiOps";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faInfo } from "@fortawesome/free-solid-svg-icons";
-import { Link, useLoaderData } from "@remix-run/react";
-import { API, API_URL } from "~/constants/api";
+import { Link } from "@remix-run/react";
+import { API_URL } from "~/constants/api";
 import { useState } from "react";
 import InfoModal from "./InfoModal";
+import type { DbInfluencer } from "~/types/ApiOps";
+import { availableCategories } from "~/constants/categories";
 
 interface InfluencerCardProps {
-  influencer: Influencer;
+  influencer: DbInfluencer;
 }
 
 function InfluencerCard({ influencer }: InfluencerCardProps) {
-  const data = useLoaderData<any>();
-  const [influencerInfo, setInfluencerInfo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const handleInfoCLick = () => {
-    console.log(API.GET_INFLUENCER_INFO + influencer.id);
-
-    fetch(API.GET_INFLUENCER_INFO + influencer.id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + String(data.token),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.data);
-        setInfluencerInfo(data.data);
-        setIsModalOpen(true);
-      });
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -41,8 +26,8 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
       <figure className="px-5 pt-5">
         <img
           src={
-            influencer.profilePicture
-              ? API_URL + influencer.profilePicture
+            influencer.influencerProfile.profilePicture
+              ? API_URL + influencer.influencerProfile.profilePicture
               : "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
           }
           alt="pfp"
@@ -54,9 +39,9 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
           {influencer.fname} {influencer.lname}
         </h2>
         <div className="card-tags justify-center">
-          {influencer.tags.map((tag, id) => (
+          {(influencer.tags ?? []).map((tag, id) => (
             <div className="badge badge-secondary px-1 mr-2 text-sm" key={id}>
-              {tag}
+              {availableCategories[tag.toLowerCase()]}
             </div>
           ))}
         </div>
@@ -74,10 +59,7 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
           </Link>
 
           {isModalOpen && (
-            <InfoModal
-              closeModal={closeModal}
-              influencerInfo={influencerInfo}
-            />
+            <InfoModal closeModal={closeModal} influencer={influencer} />
           )}
         </div>
       </div>

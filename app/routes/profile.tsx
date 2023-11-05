@@ -69,10 +69,29 @@ export default function ProfilePage() {
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    setUser((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    const setNestedState: any = (
+      prevData: any,
+      namePath: string[],
+      value: string
+    ) => {
+      const [first, ...rest] = namePath;
+      if (rest.length === 0) {
+        // If it's the last key in the path, set the value directly
+        return {
+          ...prevData,
+          [first]: value,
+        };
+      } else {
+        // If not, recurse further into the object
+        return {
+          ...prevData,
+          [first]: setNestedState(prevData[first], rest, value),
+        };
+      }
+    };
+
+    setUser((prevData) => setNestedState(prevData, name.split("."), value));
   };
 
   useEffect(() => {
@@ -120,7 +139,7 @@ export default function ProfilePage() {
 
       <ProfileForm
         handleSubmit={handleSubmit}
-        formData={user}
+        influencer={user}
         handleInputChange={handleInputChange}
         handleCategoryChange={handleCategoryChange}
         token={data.token}

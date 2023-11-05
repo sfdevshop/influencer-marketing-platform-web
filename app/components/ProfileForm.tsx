@@ -1,19 +1,19 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { API, API_URL } from "~/constants/api";
-import { availableCategories } from "~/routes/add-categories";
+import { availableCategories } from "~/constants/categories";
 import type { DbInfluencer } from "~/types/ApiOps";
 
 export function ProfileForm({
   handleSubmit,
-  formData,
+  influencer,
   handleInputChange,
   handleCategoryChange,
   token,
 }: /* Include other necessary props */
 {
   handleSubmit: any;
-  formData: DbInfluencer;
+  influencer: DbInfluencer;
   handleInputChange: any;
   handleCategoryChange: any;
   token: string;
@@ -78,8 +78,8 @@ export function ProfileForm({
               src={
                 picture
                   ? picture
-                  : formData.influencerProfile.profilePicture
-                  ? API_URL + formData.influencerProfile.profilePicture
+                  : influencer.influencerProfile.profilePicture
+                  ? API_URL + influencer.influencerProfile.profilePicture
                   : picture ?? "https://via.placeholder.com/150"
               }
               alt="avatar"
@@ -126,7 +126,7 @@ export function ProfileForm({
               type="text"
               name="fname"
               id="firstName"
-              value={formData.fname}
+              value={influencer.fname}
               onChange={handleInputChange}
               className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
             />
@@ -142,7 +142,55 @@ export function ProfileForm({
               type="text"
               name="lname"
               id="lastName"
-              value={formData.lname}
+              value={influencer.lname}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </motion.div>
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="Instagram"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Instagram
+            </label>
+            <input
+              type="text"
+              name="influencerProfile.instagramLink"
+              id="Instagram"
+              value={influencer.influencerProfile.instagramLink ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </motion.div>
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="YouTube"
+              className="block text-sm font-medium text-gray-700"
+            >
+              YouTube
+            </label>
+            <input
+              type="text"
+              name="influencerProfile.youtubeLink"
+              id="YouTube"
+              value={influencer.influencerProfile.youtubeLink ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            />
+          </motion.div>
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="Twitter"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Twitter
+            </label>
+            <input
+              type="text"
+              name="influencerProfile.twitterLink"
+              id="Twitter"
+              value={influencer.influencerProfile.twitterLink ?? ""}
               onChange={handleInputChange}
               className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
             />
@@ -158,7 +206,7 @@ export function ProfileForm({
               type="email"
               name="email"
               id="email"
-              value={formData.email}
+              value={influencer.email}
               onChange={handleInputChange}
               className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
             />
@@ -193,25 +241,25 @@ export function ProfileForm({
               <div
                 key={category[0]}
                 className={`p-3 m-2 rounded-full cursor-pointer transform hover:scale-105 transition duration-300 ${
-                  formData.influencerProfile.categories.includes(
+                  influencer.influencerProfile.categories.includes(
                     category[0].toUpperCase()
                   )
                     ? " bg-secondary text-black"
                     : "bg-gray-200"
                 }`}
                 onClick={() => {
-                  formData.influencerProfile.categories.includes(
+                  influencer.influencerProfile.categories.includes(
                     category[0].toUpperCase()
                   )
                     ? handleCategoryChange(
-                        formData.influencerProfile.categories.filter(
+                        influencer.influencerProfile.categories.filter(
                           (selectedCategory: string) =>
                             selectedCategory !== category[0].toUpperCase()
                         )
                       )
-                    : formData.influencerProfile.categories.length < 3 &&
+                    : influencer.influencerProfile.categories.length < 3 &&
                       handleCategoryChange([
-                        ...formData.influencerProfile.categories,
+                        ...influencer.influencerProfile.categories,
                         category[0].toUpperCase(),
                       ]);
                 }}
@@ -225,10 +273,10 @@ export function ProfileForm({
               type="submit"
               className="btn btn-primary mt-2 w-full"
               disabled={
-                formData.fname === "" ||
-                formData.lname === "" ||
-                formData.email === "" ||
-                formData.influencerProfile.categories.length === 0
+                influencer.fname === "" ||
+                influencer.lname === "" ||
+                influencer.email === "" ||
+                influencer.influencerProfile.categories.length === 0
               }
             >
               Save

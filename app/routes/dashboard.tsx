@@ -5,7 +5,6 @@ import { getUserSession } from "~/utils/userSession";
 import type { DbInfluencer } from "~/types/ApiOps";
 import { getUser } from "~/utils/db";
 import UserHomeCard from "~/components/UserHomeCard";
-import Navbar from "~/components/Navbar";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -25,7 +24,6 @@ export default function BrandHome() {
 
   return (
     <div>
-      <Navbar />
       <UserHomeCard user={data.user} />
     </div>
   );

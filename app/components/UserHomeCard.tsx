@@ -34,7 +34,7 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
             {user.usertype.toLowerCase()}
           </div>
           <div className="flex flex-row justify-center items-center mt-5">
-            <Link to={`/chatbox?otherPerson=${69}`}>
+            <Link to={`/mychats`} prefetch="intent">
               <button className="btn btn-primary btn-circle mx-2">
                 <FontAwesomeIcon icon={faComment} />
               </button>
