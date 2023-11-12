@@ -15,4 +15,6 @@ export const API = {
   UPLOAD_PFP: API_URL + "/user/uploadPfp",
   GET_INFLUENCER_INFO: API_URL + "/brand/getInfluencerInfo/",
   GET_INFLUENCERS_FOR_CAMPAIGN: API_URL + "/brand/getInfluencers/?",
+  CREATE_CAMPAIGN: API_URL + "/brand/createCampaign",
+  DELETE_CAMPAIGN: API_URL + "/brand/deleteCampaign/",
 };
