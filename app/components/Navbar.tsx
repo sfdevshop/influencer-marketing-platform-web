@@ -1,8 +1,20 @@
 import { faBars, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "@remix-run/react";
+import { ApiOps } from "~/types/ApiOps";
 
 export default function Navbar() {
+  const handleLogOut = async () => {
+    const formData = new FormData();
+    formData.append("operation", ApiOps.LOGOUT);
+    const response = await fetch("/api", {
+      method: "POST",
+      body: formData,
+    });
+    if (response.status === 200) {
+      window.location.href = "/log-in";
+    }
+  };
   return (
     <div className="navbar px-5 sticky top-0 z-[1] bg-white shadow-md backdrop-filter backdrop-blur-lg bg-opacity-30">
       <div className="navbar-start">
@@ -33,7 +45,7 @@ export default function Navbar() {
               <a href="/profile">Profile</a>
             </li>
             <li>
-              <a>Log out</a>
+              <a onClick={handleLogOut}>Log out</a>
             </li>
           </ul>
         </div>
