@@ -4,8 +4,9 @@ import { availableCategories } from "~/constants/categories";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { BrandCampaignsContext } from "./CampaignsBrand";
-import { getInfluencersForCampaign } from "~/utils/db";
+import { createCampaign, getInfluencersForCampaign } from "~/utils/db";
 import type { DbInfluencer } from "~/types/ApiOps";
+import { InfluencerSmallCard } from "./InfluencerSmallCard";
 
 export function CreateCampaignModal() {
   const context = useContext(BrandCampaignsContext);
@@ -19,10 +20,37 @@ export function CreateCampaignModal() {
   const [selectedInfluencerIds, setSelectedInfluencerIds] = useState<number[]>(
     []
   );
+  const [picture, setPicture] = useState<string | null>(null);
+
+  const [pictureFile, setPictureFile] = useState<File | null>(null);
+  const [creatingCampaign, setCreatingCampaign] = useState(false);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setCampaign({ ...campaign, [name]: value });
+  };
+
+  const handleCampaignCreation = async (e: any) => {
+    e.preventDefault();
+    setCreatingCampaign(true);
+    const newCampaign = await createCampaign(
+      context.token,
+      campaign,
+      selectedInfluencerIds,
+      pictureFile!
+    );
+
+    setCreatingCampaign(false);
+    context.setCampaigns([...context.campaigns, newCampaign]);
+
+    // @ts-ignore
+    document.getElementById("create-new-campaign").close();
+    setStep(1);
+    setCampaign({});
+    setSelectedCategories([]);
+    setPicture(null);
+    setPictureFile(null);
+    setSelectedInfluencerIds([]);
   };
 
   const handleSubmit = async (e: any) => {
@@ -37,9 +65,6 @@ export function CreateCampaignModal() {
       setFetchedInfluencers(inf);
       setStep(2); // Move to the next step
       setFetchingInfluencers(false);
-    } else {
-      // Final step to create the campaign
-      console.log("Campaign Created:", campaign);
     }
   };
 
@@ -67,6 +92,34 @@ export function CreateCampaignModal() {
             {step === 1 ? (
               <form onSubmit={handleSubmit}>
                 {/* The form fields */}
+                {/* required field to upload jpg or png */}
+                <div className="flex flex-row">
+                  <label className="font-bold text-lg">Image:</label>
+                  <div>
+                    {picture && (
+                      <img
+                        src={picture}
+                        alt="campaign"
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                    )}
+                    <input
+                      type="file"
+                      name="file"
+                      required
+                      onChange={(e) => {
+                        // @ts-ignore
+                        const file = e.target.files[0];
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = () => {
+                          setPictureFile(file);
+                          setPicture(reader.result as string);
+                        };
+                      }}
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="font-bold text-lg">
                     Name of the campaign:
@@ -107,6 +160,16 @@ export function CreateCampaignModal() {
                     className="textarea textarea-bordered w-full"
                     onChange={handleInputChange}
                   ></textarea>
+                </div>
+                <div>
+                  <label className="font-bold text-lg">Linkback URL</label>
+                  <input
+                    type="text"
+                    name="linkBackURL"
+                    className="input input-bordered w-full"
+                    required
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="flex flex-row">
                   <div>
@@ -248,10 +311,10 @@ export function CreateCampaignModal() {
               <div>
                 <div className="form-control">
                   {fetchedInfluencers.map((influencer, id) => (
-                    <label className="label cursor-pointer" key={id}>
-                      <span className="label-text">
-                        {influencer.fname} {influencer.lname}
-                      </span>
+                    <div
+                      key={id}
+                      className="flex flex-row justify-between items-center"
+                    >
                       <input
                         type="checkbox"
                         onChange={(e) => {
@@ -269,10 +332,23 @@ export function CreateCampaignModal() {
                           }
                         }}
                         checked={selectedInfluencerIds.includes(influencer.id)}
-                        className="checkbox"
+                        className="checkbox checkbox-secondary h-[4rem] w-[4rem] mr-2"
                       />
-                    </label>
+                      <InfluencerSmallCard influencer={influencer} />
+                    </div>
                   ))}
+                  <div className="flex justify-center">
+                    <button
+                      type="submit"
+                      className="btn btn-secondary mt-5"
+                      disabled={
+                        selectedInfluencerIds.length === 0 || creatingCampaign
+                      }
+                      onClick={handleCampaignCreation}
+                    >
+                      {creatingCampaign ? "Creating..." : "Create Campaign"}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
