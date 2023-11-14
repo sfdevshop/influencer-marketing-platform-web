@@ -21,7 +21,7 @@ export const getInfluencersForCampaign = async (
   const response = await fetch(
     API.GET_INFLUENCERS_FOR_CAMPAIGN +
       `categories=${cateogries.join(
-        ","
+        "&categories="
       )}&budgetPerInfluencer=${budgetPerInfluencer}`,
     {
       method: "GET",
