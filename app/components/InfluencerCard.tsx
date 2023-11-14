@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faInfo } from "@fortawesome/free-solid-svg-icons";
+import { FaComment, FaInfo } from "react-icons/fa6";
 import { Link } from "@remix-run/react";
 import { API_URL } from "~/constants/api";
 import { useState } from "react";
@@ -50,11 +49,11 @@ function InfluencerCard({ influencer }: InfluencerCardProps) {
             className="btn btn-circle btn-primary"
             onClick={handleInfoCLick}
           >
-            <FontAwesomeIcon icon={faInfo} size="xl" />
+            <FaInfo size={15} />
           </button>
           <Link to={`/chatbox?otherPerson=${influencer.id}`}>
             <button className="btn btn-circle btn-primary">
-              <FontAwesomeIcon icon={faComment} size="xl" />
+              <FaComment size={15} />
             </button>
           </Link>
 

@@ -1,5 +1,4 @@
-import { faBars, faBell } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaBars, FaBell } from "react-icons/fa6";
 import { Link } from "@remix-run/react";
 import { ApiOps } from "~/types/ApiOps";
 
@@ -26,13 +25,13 @@ export default function Navbar() {
       <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
           <div className="indicator">
-            <FontAwesomeIcon icon={faBell} />
+            <FaBell />
             <span className="badge badge-xs badge-primary indicator-item"></span>
           </div>
         </button>
         <div className="dropdown dropdown-end">
           <button className="btn btn-ghost btn-circle">
-            <FontAwesomeIcon icon={faBars} />
+            <FaBars />
           </button>
           <ul
             tabIndex={0}

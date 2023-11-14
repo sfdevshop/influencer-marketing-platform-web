@@ -1,10 +1,4 @@
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faInstagram,
-  faYoutube,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import type { DbInfluencer } from "~/types/ApiOps";
 
 function InfoModal({
@@ -31,7 +25,7 @@ function InfoModal({
                 rel="noreferrer"
               >
                 <button className="btn btn-secondary btn-circle">
-                  <FontAwesomeIcon icon={faInstagram} size="xl" />
+                  <FaInstagram size={15} />
                 </button>
               </a>
             )}
@@ -42,7 +36,7 @@ function InfoModal({
                 rel="noreferrer"
               >
                 <button className="btn btn-secondary btn-circle">
-                  <FontAwesomeIcon icon={faYoutube} size="xl" />
+                  <FaYoutube size={15} />
                 </button>
               </a>
             )}
@@ -53,7 +47,7 @@ function InfoModal({
                 rel="noreferrer"
               >
                 <button className="btn btn-secondary btn-circle">
-                  <FontAwesomeIcon icon={faTwitter} size="xl" />
+                  <FaTwitter size={15} />
                 </button>
               </a>
             )}

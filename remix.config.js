@@ -8,6 +8,7 @@ export default {
   // assetsBuildDirectory: "public/build",
   serverModuleFormat: "esm",
   tailwind: true,
+  serverDependenciesToBundle: [/^react-icons/],
   browserNodeBuiltinsPolyfill: {
     modules: {
       buffer: true,

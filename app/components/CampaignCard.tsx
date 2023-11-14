@@ -1,5 +1,4 @@
-import { faInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaInfo, FaTrash } from "react-icons/fa6";
 import { useContext, useState } from "react";
 import { API_URL } from "~/constants/api";
 import type { Campaign } from "~/types/ApiOps";
@@ -35,13 +34,13 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
             onClick={handleDeleteCampaign}
             disabled={deleting}
           >
-            <FontAwesomeIcon icon={faTrash} size="xl" />
+            <FaTrash size={15} />
           </button>
           <button
             className="btn btn-circle hover:btn-secondary"
             disabled={deleting}
           >
-            <FontAwesomeIcon icon={faInfo} size="xl" />
+            <FaInfo size={15} />
           </button>
         </div>
       </div>

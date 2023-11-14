@@ -1,10 +1,9 @@
 import {
-  faComment,
-  faUser,
-  faArrowRightFromBracket,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+  FaComment,
+  FaUser,
+  FaMagnifyingGlass,
+  FaArrowRightFromBracket,
+} from "react-icons/fa6";
 import { Link } from "@remix-run/react";
 import { API_URL } from "~/constants/api";
 import type { DbInfluencer } from "~/types/ApiOps";
@@ -36,19 +35,19 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
           <div className="flex flex-row justify-center items-center mt-5">
             <Link to={`/mychats`} prefetch="intent">
               <button className="btn btn-primary btn-circle mx-2">
-                <FontAwesomeIcon icon={faComment} />
+                <FaComment />
               </button>
             </Link>
             {user.usertype.toLowerCase() === "influencer" ? (
               <Link to="/profile" prefetch="intent">
                 <button className="btn btn-primary btn-circle mx-2">
-                  <FontAwesomeIcon icon={faUser} />
+                  <FaUser />
                 </button>
               </Link>
             ) : (
               <Link to="/discover-influencers" prefetch="intent">
                 <button className="btn btn-primary btn-circle mx-2">
-                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                  <FaMagnifyingGlass />
                 </button>
               </Link>
             )}
@@ -59,7 +58,7 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
                 name="operation"
                 value="LOGOUT"
               >
-                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                <FaArrowRightFromBracket />
               </button>
             </form>
           </div>

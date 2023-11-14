@@ -1,8 +1,7 @@
 import { Fragment, useContext, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { availableCategories } from "~/constants/categories";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { FaCheck, FaChevronUp } from "react-icons/fa6";
 import { BrandCampaignsContext } from "./CampaignsBrand";
 import { createCampaign, getInfluencersForCampaign } from "~/utils/db";
 import type { DbInfluencer } from "~/types/ApiOps";
@@ -252,7 +251,7 @@ export function CreateCampaignModal() {
                                 .join(", ")}
                         </span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <FontAwesomeIcon icon={faChevronUp} />
+                          <FaChevronUp />
                         </span>
                       </Listbox.Button>
                       <Transition
@@ -288,7 +287,7 @@ export function CreateCampaignModal() {
                                     </span>
                                     {selected ? (
                                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                        <FontAwesomeIcon icon={faCheck} />
+                                        <FaCheck />
                                       </span>
                                     ) : null}
                                   </>
