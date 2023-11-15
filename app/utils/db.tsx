@@ -74,3 +74,12 @@ export const deleteCampaign = async (token: string, campaignId: number) => {
     },
   });
 };
+
+export const markNotifAsRead = async (token: string, notifId: number) => {
+  await fetch(API.MARK_NOTIFICATIONS_AS_READ + `${notifId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + String(token),
+    },
+  });
+};

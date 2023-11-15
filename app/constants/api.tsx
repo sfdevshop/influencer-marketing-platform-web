@@ -17,4 +17,6 @@ export const API = {
   GET_INFLUENCERS_FOR_CAMPAIGN: API_URL + "/brand/getInfluencers/?",
   CREATE_CAMPAIGN: API_URL + "/brand/createCampaign",
   DELETE_CAMPAIGN: API_URL + "/brand/deleteCampaign/",
+  FETCH_NOTIFICATIONS: API_URL + "/notification/getAllForUser",
+  MARK_NOTIFICATIONS_AS_READ: API_URL + "/notification/markRead/",
 };
