@@ -83,3 +83,16 @@ export const markNotifAsRead = async (token: string, notifId: number) => {
     },
   });
 };
+
+export const getCampaign = async (token: string, campaignId: number) => {
+  const data = await fetch(API.GET_CAMPAIGN + campaignId, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + String(token),
+    },
+  });
+  const json = await data.json();
+  console.log(json);
+
+  return json.data as Campaign;
+};

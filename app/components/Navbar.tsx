@@ -35,6 +35,7 @@ export default function Navbar({
         Authorization: "Bearer " + String(token),
       },
     });
+
     if (response.status === 200) {
       const data = await response.json();
       setNotifications(() => [...data.data]);
@@ -66,6 +67,8 @@ export default function Navbar({
     setNotifications(() => [...newNotifications]);
     await markNotifAsRead(token!, notificationId);
   };
+
+  console.log(notifications);
 
   return (
     <div className="navbar px-5 sticky top-0 z-[1] bg-white shadow-md backdrop-filter backdrop-blur-lg bg-opacity-30">
@@ -100,7 +103,10 @@ export default function Navbar({
                         <div
                           className={notification.isRead ? "bg-gray-300" : ""}
                         >
-                          <a key={id}>{notification.message} </a>
+                          <a key={id} href={`/campaigns/${notification.id}`}>
+                            {/* {notification.id} */}
+                            {notification.message}{" "}
+                          </a>
                         </div>
                       </li>
                     ))}

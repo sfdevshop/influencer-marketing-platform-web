@@ -19,4 +19,7 @@ export const API = {
   DELETE_CAMPAIGN: API_URL + "/brand/deleteCampaign/",
   FETCH_NOTIFICATIONS: API_URL + "/notification/getAllForUser",
   MARK_NOTIFICATIONS_AS_READ: API_URL + "/notification/markRead/",
+  GET_CAMPAIGN: API_URL + "/brand/getCampaignInfo/",
+  ACCEPT_CAMPAIGN: API_URL + "/notification/acceptCampaign/",
+  DECLINE_CAMPAIGN: API_URL + "/notification/rejectCampaign/",
 };

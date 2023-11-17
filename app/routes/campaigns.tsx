@@ -1,6 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "react-router";
+import CampaignHandler from "~/components/CampaignHandler";
 import { CampaignsBrand } from "~/components/CampaignsBrand";
 import { CampaignsInfluencer } from "~/components/CampaignsInfluencer";
 import { UserTypes, type DbBrand, type DbInfluencer } from "~/types/ApiOps";
@@ -16,21 +17,25 @@ export const loader: LoaderFunction = async (args) => {
   const data = await getUser(token);
   const user = data.data as DbInfluencer | DbBrand;
 
-  return json({ userId, token, user });
+  const notif_id = args.params.campaignId;
+
+  return json({ userId, token, user, notif_id });
 };
 
 export default function Campaigns() {
   const data = useLoaderData();
-  const { userId, token, user } = data as any;
+  const { userId, token, user, notif_id } = data as any;
 
   return (
     <>
       {user.usertype === UserTypes.INFLUENCER ? (
-        <CampaignsInfluencer
-          userId={userId}
-          token={token}
-          user={user as DbInfluencer}
-        />
+        // <CampaignsInfluencer
+        //   userId={userId}
+        //   token={token}
+        //   user={user as DbInfluencer}
+        // />
+        // redirect to campaigns.$campaignId route
+        <CampaignHandler notif_id={notif_id} token={token} />
       ) : (
         <CampaignsBrand userId={userId} token={token} user={user as DbBrand} />
       )}
