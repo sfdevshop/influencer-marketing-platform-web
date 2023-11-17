@@ -131,7 +131,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="toast toast-top toast-center">
+      <div className="toast toast-top toast-center z-[100000]">
         {success && <div className="alert alert-success">{success}</div>}
 
         {error && <div className="alert alert-error">{error}</div>}
