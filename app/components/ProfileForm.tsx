@@ -3,6 +3,8 @@ import { useState } from "react";
 import { API, API_URL } from "~/constants/api";
 import { availableCategories } from "~/constants/categories";
 import type { DbInfluencer } from "~/types/ApiOps";
+import { ageGroupConst } from "~/constants/ageGroup";
+import { genderConst } from "~/constants/gender";
 
 export function ProfileForm({
   handleSubmit,
@@ -163,6 +165,43 @@ export function ProfileForm({
               className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
             />
           </motion.div>
+
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="Instagram Followers"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Instagram Followers Total
+            </label>
+            <input
+              type="number"
+              name="influencerProfile.instagramFollowersInt"
+              id="instgaramFollowers"
+              value={influencer.influencerProfile.instagramFollowersInt ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              min="0" // Enforce the >=0 condition
+            />
+          </motion.div>
+
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="Min Campaign Value"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Min Campaign Value (in $)
+            </label>
+            <input
+              type="number"
+              name="influencerProfile.minimumCampaignValue"
+              id="minCampaignValue"
+              value={influencer.influencerProfile.minimumCampaignValue ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              min="0" // Enforce the >=0 condition
+            />
+          </motion.div>
+
           <motion.div className="mb-4" variants={itemVariants}>
             <label
               htmlFor="YouTube"
@@ -226,6 +265,51 @@ export function ProfileForm({
               className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
             />
           </motion.div> */}
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="ageGroup"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Age Group
+            </label>
+            <select
+              name="influencerProfile.ageGroup"
+              id="ageGroup"
+              value={influencer.influencerProfile.ageGroup ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            >
+              <option value="">Select Age Group</option>
+              {Object.entries(ageGroupConst).map(([key, value]) => (
+                <option key={value} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          </motion.div>
+
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label
+              htmlFor="gender"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Gender
+            </label>
+            <select
+              name="influencerProfile.gender"
+              id="gender"
+              value={influencer.influencerProfile.gender ?? ""}
+              onChange={handleInputChange}
+              className="input input-bordered mt-1 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+            >
+              <option value="">Select Gender</option>
+              {Object.entries(genderConst).map(([key, value]) => (
+                <option key={value} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          </motion.div>
           <motion.div className="mb-4" variants={itemVariants}>
             <label
               htmlFor="categories"

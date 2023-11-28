@@ -10,6 +10,9 @@ import { getUserSession } from "~/utils/userSession";
 import { UserTypes, type DbInfluencer } from "~/types/ApiOps";
 import { getUser } from "~/utils/db";
 import { availableCategories } from "~/constants/categories";
+import { follwersRange } from "~/constants/followersRange";
+import { ageGroupConst } from "~/constants/ageGroup";
+import { genderConst } from "~/constants/gender";
 
 export const loader: LoaderFunction = async (args) => {
   const { userId, token } = await getUserSession(args);
@@ -32,6 +35,11 @@ function DiscoverInfluencers() {
   const [influencers, setInfluencers] = useState<DbInfluencer[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
+  // States for the new dropdowns
+  const [followers, setFollowers] = useState<string>("");
+  const [ageGroup, setAgeGroup] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+
   const handleCategoryChange = (category: string) => {
     // Toggle the selection of the category
     if (selectedCategories.includes(category)) {
@@ -52,7 +60,7 @@ function DiscoverInfluencers() {
       }
     });
 
-    const queryParams = selectedCategoryKeys
+    let queryParams = selectedCategoryKeys
       .map((category) => `categories=${category}`)
       .join("&");
 
@@ -62,7 +70,26 @@ function DiscoverInfluencers() {
     // fetch(`/brand/getInfluencers?${queryParams}`)
     //   .then((response) => response.json())
     //   .then((data) => setInfluencers(data));
+    console.log(
+      "Age Group:" +
+        ageGroup +
+        "Followers Range:" +
+        followers +
+        "Gender: " +
+        gender
+    );
+    if (ageGroup != null && ageGroup != "") {
+      queryParams += `&ageGroup=${ageGroup}`;
+    }
+    if (gender != null && gender != "") {
+      queryParams += `&gender=${gender}`;
+    }
 
+    if (followers != null && followers != "") {
+      queryParams += `&followersRange=${followers}`;
+    }
+
+    console.log(queryParams);
     try {
       fetch(`${API.GET_INFLUENCERS_URL}${queryParams}`, {
         method: "GET",
@@ -84,6 +111,22 @@ function DiscoverInfluencers() {
     }
   };
 
+  // Handlers for the new dropdowns
+  const handleFollowersChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setFollowers(event.target.value);
+  };
+
+  const handleAgeGroupChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setAgeGroup(event.target.value);
+  };
+
+  const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setGender(event.target.value);
+  };
   return (
     <div className="discover-influencers-container">
       <div className="top-section bg-slate-800  p-8">
@@ -104,6 +147,63 @@ function DiscoverInfluencers() {
               {category}
             </div>
           ))}
+        </div>
+
+        {/* New Dropdowns */}
+        <div className="dropdowns-container gap-2 my-2 flex flex-row justify-end mt-8">
+          <select
+            className="dropdown border border-gray-300 rounded py-2 px-4"
+            value={followers}
+            onChange={handleFollowersChange}
+            style={{
+              padding: "0.5em",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+            }}
+          >
+            <option value="">No of Followers</option>
+            {Object.entries(follwersRange).map(([label, value]) => (
+              <option value={value} key={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="dropdown border border-gray-300 rounded py-2 px-4"
+            value={ageGroup}
+            onChange={handleAgeGroupChange}
+            style={{
+              padding: "0.5em",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+            }}
+          >
+            <option value="">Age Group</option>
+            {Object.entries(ageGroupConst).map(([label, value]) => (
+              <option value={value} key={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="dropdown border border-gray-300 rounded py-2 px-4"
+            value={gender}
+            onChange={handleGenderChange}
+            style={{
+              padding: "0.5em",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+            }}
+          >
+            <option value="">Gender</option>
+            {Object.entries(genderConst).map(([label, value]) => (
+              <option value={value} key={value}>
+                {label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex">
           <button
