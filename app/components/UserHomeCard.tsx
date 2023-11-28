@@ -3,7 +3,9 @@ import {
   FaUser,
   FaMagnifyingGlass,
   FaArrowRightFromBracket,
+  FaSquarePlus,
 } from "react-icons/fa6";
+import { MdCampaign } from "react-icons/md";
 import { Link } from "@remix-run/react";
 import { API_URL } from "~/constants/api";
 import type { DbInfluencer } from "~/types/ApiOps";
@@ -48,6 +50,19 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
               <Link to="/discover-influencers" prefetch="intent">
                 <button className="btn btn-primary btn-circle mx-2">
                   <FaMagnifyingGlass />
+                </button>
+              </Link>
+            )}
+            {user.usertype.toLowerCase() === "influencer" ? (
+              <Link to="/campaigns" prefetch="intent">
+                <button className="btn btn-primary btn-circle mx-2">
+                  <MdCampaign />
+                </button>
+              </Link>
+            ) : (
+              <Link to="/campaigns" prefetch="intent">
+                <button className="btn btn-primary btn-circle mx-2">
+                  <FaSquarePlus />
                 </button>
               </Link>
             )}

@@ -43,6 +43,7 @@ export function CampaignsBrand({ userId, token, user }: CampaignsBrandProps) {
                 document.getElementById("create-new-campaign").showModal()
               }
               className="btn btn-circle btn-primary text-2xl"
+              disabled={campaigns.length === 3}
             >
               +
             </button>
