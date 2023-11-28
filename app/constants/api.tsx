@@ -22,4 +22,5 @@ export const API = {
   GET_CAMPAIGN: API_URL + "/brand/getCampaignInfo/",
   ACCEPT_CAMPAIGN: API_URL + "/notification/acceptCampaign/",
   DECLINE_CAMPAIGN: API_URL + "/notification/rejectCampaign/",
+  GET_CAMPAIGNS_FOR_INFLUENCER: API_URL + "/user/getAllCampaigns",
 };
