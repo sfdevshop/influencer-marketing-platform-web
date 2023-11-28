@@ -28,6 +28,8 @@ export default function Navbar({
 
   // send a get request to the server to fetch notifications, also send the token
   const fetchNotifs = async () => {
+    console.log("fetching notifs");
+    console.log(token);
     const response = await fetch(API.FETCH_NOTIFICATIONS, {
       method: "GET",
       headers: {
@@ -44,6 +46,7 @@ export default function Navbar({
     }
   };
   useEffect(() => {
+    if (user?.usertype === UserTypes.BRAND) return;
     fetchNotifs();
 
     const timer = setInterval(() => {
@@ -62,13 +65,13 @@ export default function Navbar({
       }
       return notification;
     });
-    console.log(newNotifications);
+    console.log("new", newNotifications);
 
     setNotifications(() => [...newNotifications]);
     await markNotifAsRead(token!, notificationId);
   };
 
-  console.log(notifications);
+  console.log("hre", notifications);
 
   return (
     <div className="navbar px-5 sticky top-0 z-[1] bg-white shadow-md backdrop-filter backdrop-blur-lg bg-opacity-30">
@@ -85,8 +88,9 @@ export default function Navbar({
               <div className="indicator">
                 <FaBell />
                 {notifications.length > 0 &&
-                  notifications.filter((notification) => !notification.isRead)
-                    .length > 0 && (
+                  notifications.filter(
+                    (notification) => !notification.notification.isRead
+                  ).length > 0 && (
                     <span className="badge badge-xs badge-primary indicator-item"></span>
                   )}
                 {notifications.length > 0 && (
@@ -97,15 +101,26 @@ export default function Navbar({
                     {notifications.map((notification, id) => (
                       // <li </li>
                       <li
-                        onClick={async () => await markAsRead(notification.id)}
+                        onClick={async () =>
+                          await markAsRead(notification.notification.id)
+                        }
                         key={id}
                       >
                         <div
-                          className={notification.isRead ? "bg-gray-300" : ""}
+                          className={
+                            notification.notification.isRead
+                              ? "bg-gray-300"
+                              : ""
+                          }
                         >
-                          <a key={id} href={`/campaigns/${notification.id}`}>
-                            {/* {notification.id} */}
-                            {notification.message}{" "}
+                          <a
+                            key={id}
+                            href={`/campaigns/${notification.notification.id}`}
+                          >
+                            {notification.brandName} has sent you a campaign
+                            invite: {/* new line */}
+                            <br />
+                            {notification.notification.message}
                           </a>
                         </div>
                       </li>
