@@ -1,5 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 import { useLoaderData } from "react-router";
 import CampaignHandler from "~/components/CampaignHandler";
 import { CampaignsBrand } from "~/components/CampaignsBrand";
@@ -28,15 +29,21 @@ export default function Campaigns() {
 
   return (
     <>
+      <Outlet />
       {user.usertype === UserTypes.INFLUENCER ? (
+        <CampaignsInfluencer
+          userId={userId}
+          token={token}
+          user={user as DbInfluencer}
+        />
+      ) : (
+        // redirect to campaigns.$campaignId route
+        // <CampaignHandler notif_id={notif_id} token={token} />
         // <CampaignsInfluencer
         //   userId={userId}
         //   token={token}
         //   user={user as DbInfluencer}
         // />
-        // redirect to campaigns.$campaignId route
-        <CampaignHandler notif_id={notif_id} token={token} />
-      ) : (
         <CampaignsBrand userId={userId} token={token} user={user as DbBrand} />
       )}
     </>

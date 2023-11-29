@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { API } from "~/constants/api";
 import type { DbInfluencer } from "~/types/ApiOps";
 import { CampaignCard } from "./CampaignCard";
+import { Outlet } from "@remix-run/react";
 
 export interface CampaignsInfluencerProps {
   userId: string;
@@ -35,17 +36,19 @@ export function CampaignsInfluencer({
   console.log(campaigns);
 
   return (
-    <div className="w-full flex flex-col justify-center items-center my-10">
-      <div className="w-full max-w-2xl px-5">
-        <div className="w-full flex flex-row justify-between items-center">
-          <h1 className="font-black text-xl">Active Campaigns</h1>
-        </div>
-        {campaigns.map((campaign, id) => (
-          <div key={id}>
-            <CampaignCard campaign={campaign} user={user} />
+    <>
+      <div className="w-full flex flex-col justify-center items-center my-10">
+        <div className="w-full max-w-2xl px-5">
+          <div className="w-full flex flex-row justify-between items-center">
+            <h1 className="font-black text-xl">Active Campaigns</h1>
           </div>
-        ))}
+          {campaigns.map((campaign, id) => (
+            <div key={id}>
+              <CampaignCard campaign={campaign} user={user} />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

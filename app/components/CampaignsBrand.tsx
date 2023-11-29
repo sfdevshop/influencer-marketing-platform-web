@@ -51,7 +51,7 @@ export function CampaignsBrand({ userId, token, user }: CampaignsBrandProps) {
           </div>
           {campaigns.map((campaign, id) => (
             <div key={id}>
-              <CampaignCard campaign={campaign} />
+              <CampaignCard campaign={campaign} user={user} />
             </div>
           ))}
         </div>
