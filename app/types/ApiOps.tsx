@@ -49,6 +49,8 @@ export type InfluencerProfile = {
   aboutMe: string | null;
   minimumCampaignValue: number | null;
   photos: string[] | null;
+  campaignId: number[] | null;
+  instagramFollowersInt: number | null;
 };
 
 export type BrandProfile = {

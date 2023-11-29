@@ -16,7 +16,7 @@ function InfoModal({
             {influencer.fname} {influencer.lname}
           </h2>
           <p>Email : {influencer.email}</p>
-          <p>Followers : {influencer.influencerProfile.followerRange}</p>
+          <p>Followers : {influencer.influencerProfile.instagramFollowers}</p>
           <div className="modal-action p-4">
             {influencer.influencerProfile.instagramLink && (
               <a
