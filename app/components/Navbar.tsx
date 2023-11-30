@@ -46,7 +46,7 @@ export default function Navbar({
     }
   };
   useEffect(() => {
-    if (user?.usertype === UserTypes.BRAND) return;
+    // if (user?.usertype === UserTypes.BRAND) return;
     fetchNotifs();
 
     const timer = setInterval(() => {
@@ -83,30 +83,31 @@ export default function Navbar({
       </div>
       <div className="navbar-center"></div>
       <div className="navbar-end">
-        {token && user && user.usertype === UserTypes.INFLUENCER && (
-          <div className="dropdown dropdown-end">
-            <button tabIndex={0} className="btn btn-ghost btn-circle">
-              <div className="indicator">
-                <FaBell />
-                {notifications.length > 0 &&
-                  notifications.filter(
-                    (notification) => !notification.notification.isRead
-                  ).length > 0 && (
-                    <span className="badge badge-xs badge-primary indicator-item"></span>
-                  )}
-                {notifications.length > 0 && (
-                  <ul
-                    tabIndex={0}
-                    className="menu menu-sm dropdown-content mt-3 z-[12] p-2 shadow bg-base-100 rounded-box w-52"
-                  >
-                    {notifications.map((notification, id) => (
-                      // <li </li>
-                      <li
-                        onClick={async () =>
-                          await markAsRead(notification.notification.id)
-                        }
-                        key={id}
-                      >
+        {/* {token && user && user.usertype === UserTypes.INFLUENCER && ( */}
+        <div className="dropdown dropdown-end">
+          <button tabIndex={0} className="btn btn-ghost btn-circle">
+            <div className="indicator">
+              <FaBell />
+              {notifications.length > 0 &&
+                notifications.filter(
+                  (notification) => !notification.notification.isRead
+                ).length > 0 && (
+                  <span className="badge badge-xs badge-primary indicator-item"></span>
+                )}
+              {notifications.length > 0 && (
+                <ul
+                  tabIndex={0}
+                  className="menu menu-sm dropdown-content mt-3 z-[12] p-2 shadow bg-base-100 rounded-box w-52"
+                >
+                  {notifications.map((notification, id) => (
+                    // <li </li>
+                    <li
+                      onClick={async () =>
+                        await markAsRead(notification.notification.id)
+                      }
+                      key={id}
+                    >
+                      {user?.usertype === UserTypes.INFLUENCER ? (
                         <div
                           className={
                             notification.notification.isRead
@@ -118,20 +119,30 @@ export default function Navbar({
                             key={id}
                             href={`/campaigns/${notification.notification.id}`}
                           >
-                            {notification.brandName} has sent you a campaign
-                            invite: {/* new line */}
-                            <br />
                             {notification.notification.message}
                           </a>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </button>
-          </div>
-        )}
+                      ) : (
+                        <div
+                          className={
+                            notification.notification.isRead
+                              ? "bg-gray-300"
+                              : ""
+                          }
+                        >
+                          <a key={id} href={`/campaigns`}>
+                            {notification.notification.message}
+                          </a>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </button>
+        </div>
+        {/* )} */}
         {token && user && (
           <div className="dropdown dropdown-end">
             <button className="btn btn-ghost btn-circle">
