@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { motion } from "framer-motion";
 
 export const meta: MetaFunction = () => {
@@ -71,9 +72,11 @@ export default function Index() {
                 Track your campaigns and engage with your audience like never
                 before.
               </p>
-              <button className="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition duration-300">
-                Discover Influencers
-              </button>
+              <Link to="/sign-up">
+                <button className="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition duration-300">
+                  Discover Influencers
+                </button>
+              </Link>
             </motion.div>
 
             <motion.div
@@ -86,9 +89,11 @@ export default function Index() {
                 Join an exclusive platform where your creativity is valued.
                 Partner with brands that resonate with your audience.
               </p>
-              <button className="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition duration-300">
-                Start Earning
-              </button>
+              <Link to="/sign-up">
+                <button className="bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition duration-300">
+                  Start Earning
+                </button>
+              </Link>
             </motion.div>
           </div>
         </motion.main>

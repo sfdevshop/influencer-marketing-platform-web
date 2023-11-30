@@ -54,6 +54,7 @@ export default function Navbar({
     }, 5000);
 
     return () => {
+      setNotifications([]);
       clearInterval(timer);
     };
   }, []);
@@ -131,25 +132,28 @@ export default function Navbar({
             </button>
           </div>
         )}
-        <div className="dropdown dropdown-end">
-          <button className="btn btn-ghost btn-circle">
-            <FaBars />
-          </button>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content  mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a href="/dashboard">Home</a>
-            </li>
-            <li>
-              <a href="/profile">Profile</a>
-            </li>
-            <li>
-              <a onClick={handleLogOut}>Log out</a>
-            </li>
-          </ul>
-        </div>
+        {token && user && (
+          <div className="dropdown dropdown-end">
+            <button className="btn btn-ghost btn-circle">
+              <FaBars />
+            </button>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content  mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <a href="/dashboard">Home</a>
+              </li>
+              <li>
+                <a href="/profile">Profile</a>
+              </li>
+
+              <li>
+                <a onClick={handleLogOut}>Log out</a>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
