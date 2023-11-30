@@ -13,6 +13,70 @@ export const getUser = async (token: string) => {
   return data;
 };
 
+export const getApprovals = async (token: string, campaignId: number) => {
+  const response = await fetch(API.GET_APPROVALS, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(token),
+    },
+    body: JSON.stringify({ campaignId }),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export const submitWorkflowPhotos = async (
+  token: string,
+  influencerId: number,
+  campaignId: number,
+  files: FileList | null
+) => {
+  if (!files) return;
+
+  for (let i = 0; i < files.length; i++) {
+    const formData = new FormData();
+    formData.append("file", files[i]);
+    formData.append("influencerId", String(influencerId));
+    formData.append("campaignId", String(campaignId));
+
+    await fetch(API.SUBMIT_WORKFLOW_PHOTOS, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + String(token),
+      },
+      body: formData,
+    });
+  }
+};
+
+export const deleteApproval = async (token: string, approvalId: number) => {
+  await fetch(API.DELETE_APPROVAL, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+
+      Authorization: "Bearer " + String(token),
+    },
+    body: JSON.stringify({ approvalId }),
+  });
+};
+
+export const switchApproval = async (
+  token: string,
+  approvalId: number,
+  approved: string
+) => {
+  await fetch(API.SWITCH_APPROVAL, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + String(token),
+    },
+    body: JSON.stringify({ approvalId, approved }),
+  });
+};
+
 export const getInfluencersForCampaign = async (
   token: string,
   cateogries: string[],
@@ -26,7 +90,6 @@ export const getInfluencersForCampaign = async (
     {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
         Authorization: "Bearer " + String(token),
       },
     }

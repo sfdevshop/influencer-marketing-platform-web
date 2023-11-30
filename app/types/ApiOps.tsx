@@ -81,6 +81,17 @@ export type Campaign = {
   impressions: number | null;
   engagement: number | null;
   brandId: number;
+  ApprovalWorkflow: ApprovalWorkflow[];
+};
+
+export type ApprovalWorkflow = {
+  id: number;
+  influencerId: number;
+  campaignId: number;
+  documentLink: string;
+  isApproved: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export enum AgeGroup {

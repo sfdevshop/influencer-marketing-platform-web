@@ -20,7 +20,7 @@ export default function CampaignHandler({
     });
     const data = await response.json();
     console.log(data);
-    navigate("/dashboard");
+    navigate("/campaigns");
   };
 
   const declineInvite = async () => {

@@ -23,4 +23,8 @@ export const API = {
   ACCEPT_CAMPAIGN: API_URL + "/notification/acceptCampaign/",
   DECLINE_CAMPAIGN: API_URL + "/notification/rejectCampaign/",
   GET_CAMPAIGNS_FOR_INFLUENCER: API_URL + "/user/getAllCampaigns",
+  SUBMIT_WORKFLOW_PHOTOS: API_URL + "/approval/upload",
+  GET_APPROVALS: API_URL + "/approval",
+  SWITCH_APPROVAL: API_URL + "/approval/switch",
+  DELETE_APPROVAL: API_URL + "/approval/delete",
 };
