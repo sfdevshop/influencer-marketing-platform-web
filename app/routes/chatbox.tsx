@@ -48,6 +48,7 @@ function ChatBox() {
     const params = url.searchParams;
 
     const otherPerson = params.get("otherPerson") || "911";
+
     setOtherPersonID(otherPerson);
 
     fetch(`http://localhost:3000/chat/getchatbox?otherPerson=${otherPerson}`, {
@@ -58,7 +59,7 @@ function ChatBox() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("chatbox first fetchd data: ", data);
 
         setMessages(
           data.messages
@@ -69,7 +70,7 @@ function ChatBox() {
         setChatboxID(data.id);
         setLoading(false);
       });
-  }, [otherPersonID]);
+  }, []);
 
   useEffect(() => {
     if (chatBoxViewRef.current) {
@@ -120,14 +121,14 @@ function ChatBox() {
                 <div
                   key={index}
                   className={`p-2 ${
-                    message.sender === myID
-                      ? "bg-green-500 text-white self-start rounded-r-lg"
-                      : "bg-gray-200 self-end rounded-l-lg"
+                    Number(message.sender) === myID
+                      ? "bg-green-500 text-white  self-end rounded-l-lg"
+                      : "bg-gray-200 self-start rounded-r-lg"
                   }`}
                 >
                   <div className="p-2">
                     <span className="font-bold">
-                      {message.sender === myID ? "Me" : "Brand X"}
+                      {Number(message.sender) === myID ? "Me" : "Brand X"}
                     </span>
                     <p className="text-black">{message.content}</p>
                   </div>
@@ -186,7 +187,11 @@ function ChatBox() {
     const socket = io("http://localhost:3000");
     setSocket(socket);
 
+    console.log(myID, otherPersonID, chatboxID);
+
     socket.on("receive_from_server", (message) => {
+      console.log("received message from server", message);
+
       setMessages((prevMessages) => [...prevMessages, message]);
       setMessageArrived(getRandomFloat());
     });
