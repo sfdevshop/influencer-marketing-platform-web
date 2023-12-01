@@ -56,13 +56,13 @@ export default function UserHomeCard({ user }: { user: DbInfluencer }) {
             {user.usertype.toLowerCase() === "influencer" ? (
               <Link to="/campaigns" prefetch="intent">
                 <button className="btn btn-primary btn-circle mx-2">
-                  <MdCampaign />
+                  <MdCampaign size={22} />
                 </button>
               </Link>
             ) : (
               <Link to="/campaigns" prefetch="intent">
                 <button className="btn btn-primary btn-circle mx-2">
-                  <FaSquarePlus />
+                  <FaSquarePlus size={15} />
                 </button>
               </Link>
             )}
