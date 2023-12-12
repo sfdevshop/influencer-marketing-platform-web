@@ -6,7 +6,7 @@ runtime nodejs18.x
 # concurrency 1
 # memory 1152
 # profile default
-# region us-west-1
+region us-west-2
 # timeout 30
 
 @http
